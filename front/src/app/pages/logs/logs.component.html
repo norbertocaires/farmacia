@@ -1,0 +1,160 @@
+<div class="dashboard-wrapper">
+  <header class="filter-bar">
+    <div class="filter-header">
+      <div class="title">
+        <i class="fas fa-list-alt"></i>
+        <span>Logs de Atividade</span>
+      </div>
+      <div class="results-count">
+        <strong>{{ totalLogs }}</strong> registros encontrados
+      </div>
+    </div>
+
+    <div class="filter-inputs">
+      <div class="input-group">
+        <label>E-mail do usuário</label>
+        <input type="text" [(ngModel)]="searchEmail" (keyup.enter)="buscar()"
+          placeholder="Ex: usuario@email.com">
+      </div>
+      <div class="filter-actions">
+        <button class="btn-search" (click)="buscar()">
+          <i class="fas fa-search"></i>
+          Buscar
+        </button>
+        @if (isFiltrandoPorEmail) {
+          <button class="btn-clear" (click)="limparBusca()">
+            <i class="fas fa-times"></i>
+            Limpar
+          </button>
+        }
+      </div>
+    </div>
+  </header>
+
+  <div class="table-container" [class.is-loading]="loading">
+    @if (loading) {
+      <div class="loader-overlay">
+        <div class="spinner-content">
+          <i class="fas fa-circle-notch fa-spin"></i>
+          <span>Carregando...</span>
+        </div>
+      </div>
+    }
+
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Ação</th>
+          <th>Descrição</th>
+          <th>Origem</th>
+          <th>Data</th>
+          <th class="text-right">Detalhes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of logs; track log.id) {
+          <tr class="table-row">
+            <td>
+              <span class="user-email">{{ log.userEmail }}</span>
+            </td>
+            <td>
+              <span class="badge" [class]="actionClass(log.action)">{{ log.action }}</span>
+            </td>
+            <td class="col-description">
+              <span class="description-text">{{ log.description }}</span>
+            </td>
+            <td>
+              <div class="origin-info">
+                @if (log.ipAddress) {
+                  <span class="ip">{{ log.ipAddress }}</span>
+                }
+                @if (formatLocation(log); as loc) {
+                  <small>{{ loc }}</small>
+                }
+              </div>
+            </td>
+            <td>
+              <span class="date-text">{{ log.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </td>
+            <td class="text-right">
+              <button class="btn-toggle" (click)="toggleDetalhes(log)" title="Ver detalhes">
+                <i class="fas" [class.fa-chevron-down]="!expandedLogIds.has(log.id)" [class.fa-chevron-up]="expandedLogIds.has(log.id)"></i>
+              </button>
+            </td>
+          </tr>
+          @if (expandedLogIds.has(log.id)) {
+            <tr class="details-row">
+              <td colspan="6">
+                <div class="details-panel">
+                  <div class="detail-item">
+                    <span class="detail-label">User-Agent</span>
+                    <span class="detail-value">{{ log.userAgent ?? '—' }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">User ID</span>
+                    <span class="detail-value">{{ log.userId ?? '—' }}</span>
+                  </div>
+                  @if (log.location?.timezone) {
+                    <div class="detail-item">
+                      <span class="detail-label">Fuso Horário</span>
+                      <span class="detail-value">{{ log.location?.timezone }}</span>
+                    </div>
+                  }
+                  @if (temMetadata(log)) {
+                    <div class="detail-item full-width">
+                      <span class="detail-label">Metadata</span>
+                      <pre class="detail-metadata">{{ metadataFormatada(log) }}</pre>
+                    </div>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        } @empty {
+          @if (!loading) {
+            <tr>
+              <td colspan="6">
+                <div class="empty-state">
+                  <div class="empty-icon">
+                    <i class="fas fa-inbox"></i>
+                  </div>
+                  <h3>Nenhum log encontrado</h3>
+                  <p>Ajuste os filtros ou tente novamente mais tarde</p>
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (!isFiltrandoPorEmail) {
+    <footer class="pagination-bar">
+      <div class="pagination-info">
+        Página <strong>{{ page }}</strong> de <strong>{{ totalPages }}</strong>
+        &nbsp;·&nbsp; {{ totalLogs }} registros
+      </div>
+      <div class="pagination-nav">
+        <button class="btn-nav" [disabled]="page <= 1" (click)="changePage(1)">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button class="btn-nav" [disabled]="page <= 1" (click)="changePage(page - 1)">
+          <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+
+        <div class="page-indicator">
+          <input type="number" [(ngModel)]="page" (change)="changePage(page)" min="1" [max]="totalPages">
+        </div>
+
+        <button class="btn-nav" [disabled]="page >= totalPages" (click)="changePage(page + 1)">
+          Próximo <i class="fas fa-chevron-right"></i>
+        </button>
+        <button class="btn-nav" [disabled]="page >= totalPages" (click)="changePage(totalPages)">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
+    </footer>
+  }
+</div>

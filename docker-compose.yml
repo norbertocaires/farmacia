@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-farmacia}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-farmacia}
+      POSTGRES_DB: ${DB_DATABASE:-farmacia}
+    volumes:
+      - farmacia_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-farmacia}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  back:
+    build:
+      context: ./back
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      FRONTEND_URL: http://localhost:4200
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-farmacia}
+      DB_PASSWORD: ${DB_PASSWORD:-farmacia}
+      DB_DATABASE: ${DB_DATABASE:-farmacia}
+      DB_SSL: "false"
+      JWT_SECRET: ${JWT_SECRET:-changeme-dev-secret}
+      JWT_EXPIRES_IN: 1d
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@farmacia.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
+      ADMIN_ROLE: SuperAdmin
+    ports:
+      - "3000:3000"
+
+  front:
+    build:
+      context: ./front
+      args:
+        GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    restart: unless-stopped
+    depends_on:
+      - back
+    ports:
+      - "4200:80"
+
+volumes:
+  farmacia_db_data:

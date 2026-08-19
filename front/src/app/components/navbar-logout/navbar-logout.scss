@@ -1,0 +1,68 @@
+/* src/app/components/navbar-logout/navbar-logout.component.scss */
+.navbar-logout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a202c;
+    text-decoration: none;
+    cursor: default; // O logo aqui não precisa ser clicável
+
+    .farmacia-logo {
+      font-size: 1.5rem;
+    }
+
+    .farmacia-name {
+      // Opcional: destaque para o nome do farmacia
+    }
+  }
+
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    a {
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.2s ease-in-out;
+    }
+
+    /* Estilo do Botão "Entrar" */
+    .btn-login {
+      color: #3182ce;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+
+      &:hover {
+        background-color: #ebf8ff;
+      }
+    }
+
+    /* Estilo do Botão "Cadastrar-se" */
+    .btn-register {
+      background-color: #3182ce;
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(49, 130, 206, 0.2);
+
+      &:hover {
+        background-color: #2b6cb0;
+        box-shadow: 0 4px 6px rgba(49, 130, 206, 0.3);
+      }
+    }
+  }
+}

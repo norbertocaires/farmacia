@@ -1,0 +1,70 @@
+<div class="modal-backdrop" (click)="closed.emit()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <div class="modal-header-icon">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <div class="modal-header-info">
+        <h2>Editar Permissões</h2>
+        <p>{{ user.name }}</p>
+      </div>
+      <button class="modal-close" (click)="closed.emit()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-email">{{ user.email }}</p>
+
+      <label class="modal-label">Função do usuário</label>
+
+      <div class="role-options">
+        <label class="role-option" [class.selected]="selectedRole === UserRole.USUARIO">
+          <input type="radio" name="role" [value]="UserRole.USUARIO" [(ngModel)]="selectedRole">
+          <div class="role-option-content">
+            <i class="fas fa-user"></i>
+            <div>
+              <strong>Usuário</strong>
+              <span>Acesso padrão ao sistema</span>
+            </div>
+          </div>
+        </label>
+
+        <label class="role-option" [class.selected]="selectedRole === UserRole.FARMACIA">
+          <input type="radio" name="role" [value]="UserRole.FARMACIA" [(ngModel)]="selectedRole">
+          <div class="role-option-content">
+            <i class="fas fa-pills"></i>
+            <div>
+              <strong>Farmácia</strong>
+              <span>Acesso ao módulo de farmácia</span>
+            </div>
+          </div>
+        </label>
+
+        <label class="role-option" [class.selected]="selectedRole === UserRole.ADMIN">
+          <input type="radio" name="role" [value]="UserRole.ADMIN" [(ngModel)]="selectedRole">
+          <div class="role-option-content">
+            <i class="fas fa-user-shield"></i>
+            <div>
+              <strong>Administrador</strong>
+              <span>Acesso total e gestão de usuários</span>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closed.emit()" [disabled]="saving">Cancelar</button>
+      <button class="btn-save" (click)="confirmed.emit(selectedRole)" [disabled]="saving || selectedRole === user.role">
+        @if (saving) {
+          <i class="fas fa-circle-notch fa-spin"></i> Salvando...
+        } @else {
+          <i class="fas fa-check"></i> Salvar
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

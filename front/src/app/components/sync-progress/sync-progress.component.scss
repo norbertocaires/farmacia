@@ -1,0 +1,100 @@
+.sync-wrapper {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 420px;
+  max-width: calc(100vw - 2rem);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transition: opacity 1s ease-out; // Para o efeito de sumir no final
+
+  &.fade-out {
+    opacity: 0.9; // Você pode mudar para 0 se quiser que suma totalmente
+    border-color: #48bb78;
+  }
+
+  .sync-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+
+    .text-group {
+      display: flex;
+      flex-direction: column;
+      
+      .message {
+        color: #2d3748;
+        font-size: 1rem;
+      }
+      .sub-text {
+        color: #718096;
+        font-size: 0.8rem;
+      }
+    }
+
+    .count-badge {
+      background: #edf2f7;
+      color: #4a5568;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      font-family: monospace;
+    }
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 18px;
+    background-color: #f1f5f9;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #e2e8f0;
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3182ce 0%, #63b3ed 100%);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.finished {
+        background: #48bb78; // Verde quando termina
+      }
+
+      .percent-tag {
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      }
+    }
+  }
+
+  .footer-status {
+    margin-top: 0.8rem;
+    color: #2f855a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+
+    .check-icon {
+      margin-right: 4px;
+    }
+
+    .countdown {
+      margin-left: 8px;
+      color: #718096;
+      font-weight: 400;
+      font-size: 0.8rem;
+    }
+  }
+}

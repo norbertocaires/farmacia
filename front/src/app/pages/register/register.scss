@@ -1,0 +1,96 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: #0f172a;
+
+  .auth-card {
+    background: #1e293b;
+    padding: 2.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid #334155;
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #3b82f6;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        label {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #94a3b8;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        input {
+          padding: 0.75rem 1rem;
+          background: #0f172a;
+          border: 1px solid #334155;
+          border-radius: 8px;
+          color: #f8fafc;
+          font-size: 0.9rem;
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s;
+
+          &::placeholder { color: #475569; }
+
+          &:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          }
+        }
+      }
+
+      button[type="submit"] {
+        margin-top: 8px;
+        background: #3b82f6;
+        color: white;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+
+        &:hover {
+          background: #2563eb;
+          transform: translateY(-1px);
+        }
+      }
+    }
+
+    p {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+
+      a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 600;
+        &:hover { text-decoration: underline; }
+      }
+    }
+  }
+}

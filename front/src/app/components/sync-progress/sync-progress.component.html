@@ -1,0 +1,40 @@
+@if (progress$ | async; as progress) {
+  <div class="sync-wrapper" [class.fade-out]="progress.percent === 100">
+
+    <div class="sync-info">
+      <div class="text-group">
+        <strong class="message">{{ message$ | async }}</strong>
+        @if (progress.total > 0) {
+          <span class="sub-text">Sincronizando banco de dados...</span>
+        }
+      </div>
+
+      @if (progress.total > 0) {
+        <div class="count-badge">
+          {{ progress.current | number }} / {{ progress.total | number }}
+        </div>
+      }
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill"
+           [style.width.%]="progress.percent"
+           [class.finished]="progress.percent === 100">
+
+        @if (progress.percent > 10) {
+          <span class="percent-tag">{{ progress.percent }}%</span>
+        }
+      </div>
+    </div>
+
+    @if (progress.percent === 100) {
+      <div class="footer-status">
+        <i class="check-icon">✔</i> Atualização concluída com sucesso!
+        @if (countdown() !== null) {
+          <span class="countdown">Fechando em {{ countdown() }}s</span>
+        }
+      </div>
+    }
+
+  </div>
+}

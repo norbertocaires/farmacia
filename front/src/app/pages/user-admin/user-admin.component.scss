@@ -1,0 +1,342 @@
+// ── Design System ─────────────────────────────────────────
+$bg-deep:    #0f172a;
+$bg-card:    #1e293b;
+$border:     #334155;
+$primary:    #3b82f6;
+$text-main:  #f8fafc;
+$text-sub:   #cbd5e1;
+$text-muted: #64748b;
+$success:    #22c55e;
+$danger:     #ef4444;
+
+:host {
+  display: block;
+  background-color: $bg-deep;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.dashboard-wrapper {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  // ── Filtros ──────────────────────────────────────────────
+  .filter-bar {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid $border;
+
+      .title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: $text-main;
+        i { color: $primary; }
+      }
+
+      .results-count {
+        font-size: 0.82rem;
+        color: $text-muted;
+        strong { color: $primary; }
+      }
+    }
+
+    .filter-inputs {
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-width: 400px;
+
+        label {
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: $text-muted;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        input {
+          padding: 0.65rem 0.9rem;
+          background: $bg-deep;
+          border: 1px solid $border;
+          border-radius: 8px;
+          color: $text-main;
+          font-size: 0.9rem;
+          transition: border-color 0.2s, box-shadow 0.2s;
+
+          &::placeholder { color: #475569; }
+
+          &:focus {
+            outline: none;
+            border-color: $primary;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          }
+        }
+      }
+    }
+  }
+
+  // ── Tabela ───────────────────────────────────────────────
+  .table-container {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+
+    .modern-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        background: rgba(0, 0, 0, 0.2);
+
+        th {
+          padding: 0.9rem 1rem;
+          font-size: 0.68rem;
+          font-weight: 600;
+          color: $text-muted;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          border-bottom: 1px solid $border;
+        }
+      }
+
+      .table-row {
+        transition: background 0.15s;
+
+        &:hover { background: rgba(59, 130, 246, 0.05); }
+
+        td {
+          padding: 1rem;
+          border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+          color: $text-sub;
+          vertical-align: middle;
+        }
+
+        &:last-child td { border-bottom: none; }
+
+        &.current-user-row {
+          background: rgba(251, 146, 60, 0.12);
+
+          td {
+            border-bottom-color: rgba(251, 146, 60, 0.2);
+          }
+
+          td:first-child {
+            border-left: 3px solid #fb923c;
+            padding-left: calc(1rem - 3px);
+          }
+
+          &:hover { background: rgba(251, 146, 60, 0.2); }
+        }
+      }
+    }
+  }
+
+  // ── Usuário ──────────────────────────────────────────────
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    .user-name  { font-weight: 700; color: $text-main; font-size: 0.9rem; }
+    .user-email { font-size: 0.72rem; color: $text-muted; margin-top: 2px; letter-spacing: 0.4px; }
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(100, 116, 139, 0.15);
+    color: $text-muted;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+
+    &.admin {
+      background: rgba(59, 130, 246, 0.12);
+      color: $primary;
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    &.farmacia {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    &.super-admin {
+      background: rgba(234, 179, 8, 0.12);
+      color: #eab308;
+      border-color: rgba(234, 179, 8, 0.35);
+    }
+  }
+
+  .status-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: $border;
+
+      &.active {
+        background: $success;
+        box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+      }
+    }
+
+    .status-text { font-size: 0.95rem; font-weight: 600; color: $text-sub; }
+  }
+
+  // ── Loader ───────────────────────────────────────────────
+  .loader-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+
+    .spinner-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: $primary;
+      i    { font-size: 2rem; }
+      span { font-weight: 600; font-size: 0.9rem; }
+    }
+  }
+
+  // ── Paginação ────────────────────────────────────────────
+  .pagination-bar {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $bg-card;
+    border: 1px solid $border;
+    padding: 0.9rem 1.25rem;
+    border-radius: 12px;
+
+    .pagination-info {
+      font-size: 0.85rem;
+      color: $text-muted;
+      strong { color: $text-sub; }
+    }
+
+    .pagination-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .btn-nav {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        background: $bg-deep;
+        border: 1px solid $border;
+        border-radius: 8px;
+        color: $text-sub;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+          background: $border;
+          color: $text-main;
+        }
+
+        &:disabled { opacity: 0.35; cursor: not-allowed; }
+      }
+
+      .page-indicator input {
+        width: 56px;
+        text-align: center;
+        padding: 6px 4px;
+        background: $bg-deep;
+        border: 1px solid $primary;
+        border-radius: 6px;
+        color: $primary;
+        font-weight: 700;
+        font-size: 0.875rem;
+
+        &:focus { outline: none; }
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 0 !important;
+    color: $text-muted;
+    i { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+    p { font-size: 1rem; }
+  }
+
+  .text-right { text-align: right; }
+
+  // ── Botão editar permissão ────────────────────────────────
+  .btn-edit {
+    padding: 7px 9px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: $text-muted;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+
+    &:hover:not(:disabled) {
+      color: $primary;
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+
+    &:disabled { opacity: 0.25; cursor: not-allowed; }
+  }
+
+  .btn-delete {
+    padding: 7px 9px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: $text-muted;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+    margin-left: 4px;
+
+    &:hover:not(:disabled) {
+      color: $danger;
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    &:disabled { opacity: 0.25; cursor: not-allowed; }
+  }
+}
+

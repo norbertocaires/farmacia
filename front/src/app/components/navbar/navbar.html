@@ -1,0 +1,43 @@
+<header class="navbar">
+  <div class="logo">Postinho</div>
+
+  <nav class="menu">
+    <a routerLink="/dashboard" routerLinkActive="active">Minha medicações</a>
+    @if (canSeeCatalog()) {
+      <a routerLink="/medicineCatalog" routerLinkActive="active">Medicações</a>
+    }
+    @if (canSeeImport()) {
+      <a routerLink="/importMedicinesComponent" routerLinkActive="active">Importar Medicamentos</a>
+    }
+    @if (canSeeUserAdmin()) {
+      <a routerLink="/useradmin" routerLinkActive="active">Administração de Usuários</a>
+    }
+    @if (canSeeLogs()) {
+      <a routerLink="/logs" routerLinkActive="active">Logs</a>
+    }
+  </nav>
+
+  <div class="user-actions">
+    <div class="user-avatar" [title]="userName()">
+      @if (userPhoto()) {
+        <img class="user-photo" [src]="userPhoto()!" [alt]="userName()">
+      } @else {
+        <span class="user-initials">{{userInitials()}}</span>
+      }
+    </div>
+
+    <div class="dropdown-container">
+      <button class="settings-btn" (click)="toggleMenu()" title="Configurações">
+        <i class="gear-icon">⚙️</i>
+      </button>
+
+      @if (menuAberto) {
+      <div class="dropdown-menu">
+        <button (click)="navegarPara('/profile')">👤 Minha Conta</button>
+        <div class="divider"></div>
+        <button class="logout-item" (click)="logout()">🚪 Sair</button>
+      </div>
+      }
+    </div>
+  </div>
+</header>

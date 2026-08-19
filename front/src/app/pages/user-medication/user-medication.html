@@ -1,0 +1,176 @@
+<div class="page-container">
+
+  <!-- ── PAGE HEADER ───────────────────────────────────── -->
+  <header class="page-header">
+    <div class="page-header-left">
+      <div class="page-header-icon">
+        <i class="fas fa-pills"></i>
+      </div>
+      <div>
+        <h1>Postinho Particular</h1>
+        <p>Controle de automedicação e economia de balcão</p>
+      </div>
+    </div>
+
+    <div class="page-header-right">
+      @if (!loading && minhaFarmacia.length > 0) {
+        <button class="btn-add" (click)="abrirModalVincular()">
+          <i class="fas fa-plus"></i>
+          <span>Nova Indicação</span>
+        </button>
+      }
+    </div>
+  </header>
+
+  <!-- ── FILTRO DE PERÍODO ─────────────────────────────── -->
+  <div class="periodo-filtro">
+    <div class="periodo-campo">
+      <label for="periodoInicio">De</label>
+      <input type="date" id="periodoInicio" [(ngModel)]="periodoInicio" [max]="periodoFim" />
+    </div>
+    <div class="periodo-campo">
+      <label for="periodoFim">Até</label>
+      <input type="date" id="periodoFim" [(ngModel)]="periodoFim" [min]="periodoInicio" />
+    </div>
+    <button class="btn-add" (click)="filtrarPorPeriodo()">
+      <i class="fas fa-filter"></i>
+      <span>Filtrar</span>
+    </button>
+  </div>
+
+  <!-- ── LOADING ───────────────────────────────────────── -->
+  @if (loading) {
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Consultando o farmacêutico...</p>
+    </div>
+  }
+
+  <!-- ── EMPTY STATE ───────────────────────────────────── -->
+  @if (!loading && minhaFarmacia.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-box-open"></i>
+      </div>
+      <h3>Seu postinho está vazio</h3>
+      <p>Adicione medicamentos para acompanhar seus gastos e dosagens</p>
+      <button class="btn-add" (click)="abrirModalVincular()">
+        <i class="fas fa-plus"></i>
+        Adicionar primeiro medicamento
+      </button>
+    </div>
+  }
+
+  <!-- ── LISTA DE MEDICAÇÕES POR MÊS ───────────────────── -->
+  @if (!loading && farmaciaAgrupada.length > 0) {
+    @for (grupo of farmaciaAgrupada; track grupo.monthKey) {
+      <div class="month-header">
+        <div class="month-title">
+          <i class="fas fa-calendar-alt"></i>
+          <span>{{ grupo.monthLabel | titlecase }}</span>
+        </div>
+        <div class="month-total">
+          <span class="month-total-label">Gasto no mês</span>
+          <span class="month-total-value">{{ grupo.totalMensal | currency:'BRL' }}</span>
+        </div>
+      </div>
+
+      @for (dia of grupo.days; track dia.dateIso) {
+        <div class="day-section">
+
+          <div class="day-label">
+            <span class="day-dot"></span>
+            <span>{{ dia.dayLabel | titlecase }}</span>
+          </div>
+
+          <div class="cards-row">
+            @for (item of dia.items; track item.id) {
+              <div class="med-card" [class.deleting]="item.isDeleting">
+
+                <div class="med-card-header">
+                  <div class="med-card-icon">
+                    <i class="fas fa-capsules"></i>
+                  </div>
+                  <div class="med-card-name">
+                    <h3>{{ item.nome }}</h3>
+                    <small>{{ item.substancia }}</small>
+                  </div>
+                  <button class="btn-edit"
+                          (click)="abrirModalEditar(item)"
+                          [disabled]="item.isDeleting"
+                          title="Editar">
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button class="btn-remove"
+                          (click)="removerMedicacao(item)"
+                          [disabled]="item.isDeleting"
+                          title="Remover">
+                    @if (item.isDeleting) {
+                      <i class="fas fa-circle-notch fa-spin"></i>
+                    } @else {
+                      <i class="fas fa-trash-alt"></i>
+                    }
+                  </button>
+                </div>
+
+                <div class="med-card-body">
+                  <div class="stat-row">
+                    @if (item.pricePaid) {
+                      <div class="stat">
+                        <span class="stat-label">Valor da Compra</span>
+                        <span class="stat-value">{{ item.pricePaid | currency:'BRL' }}</span>
+                      </div>
+                    }
+                    <div class="stat">
+                      <span class="stat-label">Gasto Diário</span>
+                      <span class="stat-value">{{ item.gastoDiario | currency:'BRL' }}</span>
+                    </div>
+                    <div class="stat">
+                      <span class="stat-label">Gasto Mensal</span>
+                      <span class="stat-value highlight">{{ item.gastoMensalEstimado | currency:'BRL' }}</span>
+                    </div>
+                    @if (item.pmc) {
+                      <div class="stat">
+                        <span class="stat-label">PMC</span>
+                        <span class="stat-value">{{ item.pmc | currency:'BRL' }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                @if (resumoPosologia(item); as posologia) {
+                  <div class="posologia-row">
+                    <i class="fas fa-prescription-bottle"></i>
+                    <span>{{ posologia }}</span>
+                  </div>
+                }
+
+                <div class="med-card-footer">
+                  <div class="pmc-badge" [class.economia]="item.economizou" [class.caro]="!item.economizou">
+                    @if (item.economizou) {
+                      <i class="fas fa-arrow-down"></i>
+                      <span>Economizou {{ item.diferencaPMC | currency:'BRL' }} vs Preço Máximo Consumidor</span>
+                    } @else {
+                      <i class="fas fa-arrow-up"></i>
+                      <span>Pagou {{ item.diferencaPMC | currency:'BRL' }} acima do Preço Máximo Consumidor</span>
+                    }
+                  </div>
+                </div>
+
+              </div>
+            }
+          </div>
+
+        </div>
+      }
+    }
+  }
+
+</div>
+
+<app-confirm-dialog
+  [visible]="confirmDialog.visible"
+  [message]="'Remover ' + (confirmDialog.item?.nome ?? '') + ' do seu postinho?'"
+  (confirmed)="confirmarRemocao()"
+  (cancelled)="cancelarRemocao()"
+/>

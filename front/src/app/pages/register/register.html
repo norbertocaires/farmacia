@@ -1,0 +1,27 @@
+<main class="auth-container">
+  
+  <div class="auth-card">
+    <h1>Crie uma Conta</h1>
+    
+    <form (submit)="onRegister()">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" [(ngModel)]="userData.name" name="name" placeholder="Nome Completo">
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="userData.email" name="email" placeholder="Email">
+      </div>
+
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" [(ngModel)]="userData.password" name="password" placeholder="Senha">
+      </div>
+
+      <button type="submit">Registrar</button>
+    </form>
+
+    <p>Já tem conta? <a routerLink="/login">Faça Login</a></p>
+  </div>
+</main>

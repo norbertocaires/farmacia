@@ -1,0 +1,34 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <h2>Configurações de Perfil</h2>
+    
+    <form [formGroup]="profileForm" (ngSubmit)="save()">
+      
+      <div class="form-group">
+        <label>E-mail (Login)</label>
+        <input type="email" formControlName="email">
+      </div>
+
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" formControlName="name" placeholder="Seu nome">
+        @if (profileForm.get('name')?.invalid && profileForm.get('name')?.touched) {
+          <span class="error-msg">O nome é obrigatório (mín. 3 caracteres).</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Nova Senha</label>
+        <input type="password" formControlName="password" placeholder="Deixe em branco para manter">
+        @if (profileForm.get('password')?.invalid && profileForm.get('password')?.touched) {
+          <span class="error-msg">A senha deve ter no mínimo 6 caracteres.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-save" [disabled]="profileForm.invalid">
+        Salvar Alterações
+      </button>
+
+    </form>
+  </div>
+</div>

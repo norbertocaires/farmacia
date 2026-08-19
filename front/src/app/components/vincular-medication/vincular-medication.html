@@ -1,0 +1,229 @@
+<div class="modal-wrapper">
+
+  <header class="modal-header">
+    <div class="header-icon">
+      <i class="fas fa-barcode"></i>
+    </div>
+    <div class="header-title">
+      <h2>Vincular Medicamento</h2>
+      <p>Digite o código EAN para localizar o produto</p>
+    </div>
+    <button class="btn-close" (click)="dialogRef.close()" title="Fechar">
+      <i class="fas fa-times"></i>
+    </button>
+  </header>
+
+  <mat-dialog-content class="modal-body">
+    <form [formGroup]="form" autocomplete="off">
+
+      <!-- EAN — apenas no modo vincular -->
+      @if (!isEditMode) {
+        <div class="field-group">
+          <label class="field-label">
+            <i class="fas fa-barcode"></i>
+            Código EAN
+          </label>
+          <div class="input-wrapper" [class.has-error]="form.get('ean')?.hasError('notFound')">
+            <input
+              class="dark-input"
+              type="text"
+              formControlName="ean"
+              placeholder="Ex: 7891234567890"
+              maxlength="13"
+              inputmode="numeric"
+            >
+            <div class="input-suffix">
+              @if (loading()) {
+                <mat-spinner diameter="18"></mat-spinner>
+              } @else if (form.get('medicationId')?.value) {
+                <i class="fas fa-check-circle text-success"></i>
+              } @else {
+                <i class="fas fa-qrcode text-muted"></i>
+              }
+              @if (isMobile) {
+                <button type="button" class="btn-scan-camera" (click)="startScan()" title="Escanear código de barras">
+                  <i class="fas fa-camera"></i>
+                </button>
+              }
+            </div>
+          </div>
+          @if (form.get('ean')?.hasError('notFound')) {
+            <span class="field-hint error">Nenhum medicamento encontrado com esse código</span>
+          } @else {
+            <span class="field-hint">A busca é feita automaticamente a partir de 8 dígitos</span>
+          }
+        </div>
+
+      }
+
+      <!-- Confirmação do medicamento (ambos os modos) -->
+      @if (form.get('medicationId')?.value) {
+        <div class="medicine-card">
+          <div class="medicine-card-top">
+            <div class="medicine-card-icon">
+              <i class="fas fa-pills"></i>
+            </div>
+            <div class="medicine-card-name">
+              <strong>{{ form.get('nomeVisual')?.value }}</strong>
+              @if (form.get('tipoProduto')?.value) {
+                <span class="med-type-badge">{{ form.get('tipoProduto')?.value }}</span>
+              }
+            </div>
+            <i class="fas fa-check-circle medicine-card-check"></i>
+          </div>
+
+          <div class="medicine-card-details">
+            @if (isEditMode && form.get('ean')?.value) {
+              <div class="med-detail">
+                <span class="med-detail-label">EAN</span>
+                <span class="med-detail-value">{{ form.get('ean')?.value }}</span>
+              </div>
+            }
+            @if (form.get('substancia')?.value) {
+              <div class="med-detail">
+                <span class="med-detail-label">Substância</span>
+                <span class="med-detail-value">{{ form.get('substancia')?.value }}</span>
+              </div>
+            }
+            @if (form.get('laboratorio')?.value) {
+              <div class="med-detail">
+                <span class="med-detail-label">Laboratório</span>
+                <span class="med-detail-value">{{ form.get('laboratorio')?.value }}</span>
+              </div>
+            }
+            @if (form.get('apresentacao')?.value) {
+              <div class="med-detail">
+                <span class="med-detail-label">Apresentação</span>
+                <span class="med-detail-value">{{ form.get('apresentacao')?.value }}</span>
+              </div>
+            }
+            @if (form.get('precoFabrica')?.value) {
+              <div class="med-detail">
+                <span class="med-detail-label">Preço Máximo Fábrica</span>
+                <span class="med-detail-value pmc">{{ form.get('precoFabrica')?.value | currency:'BRL' }}</span>
+              </div>
+            }
+            @if (form.get('pmcZero')?.value) {
+              <div class="med-detail">
+                <span class="med-detail-label">Preço Máximo Consumidor</span>
+                <span class="med-detail-value pmc">{{ form.get('pmcZero')?.value | currency:'BRL' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Linha divisória -->
+        <div class="section-divider">
+          <span>{{ isEditMode ? 'Atualizar dados da compra' : 'Detalhes da compra' }}</span>
+        </div>
+
+        <div class="fields-grid">
+
+          <div class="field-group full-width">
+            <label class="field-label">
+              <i class="fas fa-calendar-day"></i>
+              Data da Compra
+            </label>
+            <div class="input-wrapper">
+              <input class="dark-input" type="date" formControlName="dataCompra" [max]="todayIso()">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              <i class="fas fa-tag"></i>
+              Preço Pago
+            </label>
+            <div class="input-wrapper" [class.focused]="false">
+              <span class="input-prefix">R$</span>
+              <input class="dark-input with-prefix" type="number" formControlName="pricePaid" placeholder="0,00" min="0.01" step="0.01">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              <i class="fas fa-box"></i>
+              Qtd. de Caixas
+            </label>
+            <div class="input-wrapper">
+              <input class="dark-input" type="number" formControlName="boxQuantity" placeholder="1" min="1">
+              <span class="input-suffix-text">cx</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              <i class="fas fa-boxes"></i>
+              Comp. por Caixa
+            </label>
+            <div class="input-wrapper">
+              <input class="dark-input" type="number" formControlName="totalQuantity" placeholder="30" min="1">
+              <span class="input-suffix-text">un</span>
+            </div>
+            <span class="field-hint">Quantidade de comprimidos em cada caixa</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              <i class="fas fa-pills"></i>
+              Dose Diária
+            </label>
+            <div class="input-wrapper">
+              <input class="dark-input" type="number" formControlName="dosage" placeholder="1" min="0.1" step="0.1">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">
+              <i class="fas fa-clock"></i>
+              Vezes ao Dia
+            </label>
+            <div class="input-wrapper">
+              <input class="dark-input" type="number" formControlName="frequencyPerDay" placeholder="2" min="1">
+            </div>
+          </div>
+
+        </div>
+      }
+
+    </form>
+  </mat-dialog-content>
+
+  <!-- Scanner overlay -->
+  @if (scanning()) {
+    <div class="scanner-overlay">
+      <div class="scanner-header">
+        <span>Aponte para o código de barras</span>
+        <button type="button" class="btn-close-scanner" (click)="stopScan()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="scanner-viewport">
+        <video #videoPreview class="scanner-video" autoplay playsinline muted></video>
+        <div class="scanner-line"></div>
+        <div class="scanner-corners">
+          <span class="corner tl"></span>
+          <span class="corner tr"></span>
+          <span class="corner bl"></span>
+          <span class="corner br"></span>
+        </div>
+      </div>
+      <p class="scanner-hint">O código será detectado automaticamente</p>
+    </div>
+  }
+
+  <mat-dialog-actions class="modal-footer">
+    <button class="btn-cancel" (click)="dialogRef.close()">
+      Cancelar
+    </button>
+    <button class="btn-confirm"
+            [disabled]="form.invalid || loading()"
+            (click)="salvar()">
+      @if (loading()) {
+        <mat-spinner diameter="16"></mat-spinner>
+      }
+      <span>{{ loading() ? 'Salvando...' : (isEditMode ? 'Salvar Alterações' : 'Adicionar à Farmácia') }}</span>
+    </button>
+  </mat-dialog-actions>
+
+</div>

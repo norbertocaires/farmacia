@@ -1,0 +1,146 @@
+<div class="dashboard-wrapper">
+  <header class="filter-bar">
+    <div class="filter-header">
+      <div class="title">
+        <i class="fas fa-capsules"></i>
+        <span>Medicações</span>
+      </div>
+      <div class="filter-header-right">
+        <div class="results-count">
+          <strong>{{ totalItems }}</strong> registros encontrados
+        </div>
+        <button class="btn-clear" (click)="limparFiltros()" title="Limpar filtros">
+          <i class="fas fa-times"></i>
+          Limpar
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-inputs">
+      <div class="input-group">
+        <label>Produto</label>
+        <input [(ngModel)]="filtros.produto" (input)="onFilterChange()" placeholder="Ex: Dorflex">
+      </div>
+      <div class="input-group">
+        <label>Substância</label>
+        <input [(ngModel)]="filtros.substancia" (input)="onFilterChange()" placeholder="Ex: Dipirona">
+      </div>
+      <div class="input-group">
+        <label>Laboratório</label>
+        <input [(ngModel)]="filtros.laboratorio" (input)="onFilterChange()" placeholder="Ex: Medley">
+      </div>
+      <div class="input-group">
+        <label>Apresentação</label>
+        <input [(ngModel)]="filtros.apresentacao" (input)="onFilterChange()" placeholder="Ex: 500mg">
+      </div>
+      <div class="input-group">
+        <label>Tipo Produto</label>
+        <input [(ngModel)]="filtros.tipoProduto" (input)="onFilterChange()" placeholder="Ex: Generico">
+      </div>
+      <div class="input-group">
+        <label>EAN</label>
+        <input [(ngModel)]="filtros.ean" (input)="onFilterChange()" placeholder="Código de barras">
+      </div>
+      <div class="input-group">
+        <label>Registro</label>
+        <input [(ngModel)]="filtros.registro" (input)="onFilterChange()" placeholder="Registro MS">
+      </div>
+    </div>
+  </header>
+
+  <section class="table-container" [class.is-loading]="loading()">
+    @if (!loading() && medicines.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-inbox"></i>
+        </div>
+        <h3>Nenhum medicamento encontrado</h3>
+        <p>Tente ajustar os filtros para ver mais resultados.</p>
+      </div>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Medicamento / Substância</th>
+            <th>Tipo Produtor</th>
+            <th>Apresentação</th>
+            <th>Laboratório</th>
+            <th>EAN / Registro</th>
+            <th class="text-right">Preço Máximo Fábrica</th>
+            <th class="text-right">Preço Máximo Consumidor</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (med of medicines; track med.id) {
+            <tr class="table-row">
+              <td class="col-main">
+                <div class="med-info">
+                  <span class="med-name">{{ med.produto }}</span>
+                  <span class="med-sub">{{ med.substancia }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="lab-badge">{{ med.tipoProduto }}</span>
+              </td>
+              <td class="col-apresentacao">
+                <span class="text-apresentacao">{{ med.apresentacao }}</span>
+              </td>
+              <td>
+                <span class="lab-badge">{{ med.laboratorio }}</span>
+              </td>
+              <td>
+                <div class="reg-info">
+                  <code>{{ med.ean }}</code>
+                  <small>MS: {{ med.registro }}</small>
+                </div>
+              </td>
+              <td class="text-right">
+                <span class="price-tag">{{ med.precoFabrica | currency:'BRL' }}</span>
+              </td>
+              <td class="text-right">
+                <span class="price-tag">{{ med.pmcZero | currency:'BRL' }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    @if (loading()) {
+      <div class="loader-overlay">
+        <div class="spinner-content">
+          <i class="fas fa-circle-notch fa-spin"></i>
+          <span>Buscando dados...</span>
+        </div>
+      </div>
+    }
+  </section>
+
+  <footer class="pagination-bar">
+    <div class="pagination-info">
+      Mostrando página <strong>{{ filtros.page }}</strong> de <strong>{{ lastPage }}</strong>
+    </div>
+    
+    <div class="pagination-nav">
+      <button class="btn-nav" (click)="changePage(1)" [disabled]="filtros.page === 1">
+        <i class="fas fa-angle-double-left"></i> Primeira
+      </button>
+      
+      <button class="btn-nav" (click)="changePage(filtros.page - 1)" [disabled]="filtros.page === 1">
+        <i class="fas fa-angle-left"></i> Anterior
+      </button>
+      
+      <div class="page-indicator">
+        <input type="number" [(ngModel)]="filtros.page" (change)="changePage(filtros.page)" min="1" [max]="lastPage">
+      </div>
+
+      <button class="btn-nav" (click)="changePage(filtros.page + 1)" [disabled]="filtros.page === lastPage">
+        Próxima <i class="fas fa-angle-right"></i>
+      </button>
+
+      <button class="btn-nav" (click)="changePage(lastPage)" [disabled]="filtros.page === lastPage">
+        Última <i class="fas fa-angle-double-right"></i>
+      </button>
+    </div>
+  </footer>
+</div>

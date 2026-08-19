@@ -1,0 +1,107 @@
+// ── Design System ─────────────────────────────────────────
+$bg-deep:    #0f172a;
+$bg-card:    #1e293b;
+$border:     #334155;
+$primary:    #3b82f6;
+$text-main:  #f8fafc;
+$text-muted: #64748b;
+$success:    #22c55e;
+
+:host {
+  display: block;
+  background-color: $bg-deep;
+  min-height: 100vh;
+}
+
+.upload-container {
+  max-width: 560px;
+  margin: 60px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+
+  h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: $text-main;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+  }
+
+  .drop-zone {
+    border: 2px dashed $border;
+    border-radius: 12px;
+    padding: 56px 40px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: $bg-card;
+    text-align: center;
+
+    i {
+      font-size: 3rem;
+      color: $text-muted;
+      display: block;
+      margin-bottom: 16px;
+      transition: color 0.2s;
+    }
+
+    p {
+      color: $text-muted;
+      font-size: 0.9rem;
+      line-height: 1.5;
+
+      strong { color: $primary; }
+    }
+
+    &:hover {
+      border-color: $primary;
+      background: rgba(59, 130, 246, 0.05);
+      i { color: $primary; }
+    }
+
+    &.dragging {
+      border-color: $primary;
+      background: rgba(59, 130, 246, 0.08);
+      transform: scale(1.01);
+      i { color: $primary; }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  .btn-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: $primary;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      background: $border;
+      color: $text-muted;
+      cursor: not-allowed;
+      transform: none;
+    }
+  }
+}

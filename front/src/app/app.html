@@ -1,0 +1,13 @@
+<div class="app-container">
+    @if (isLogin) {
+      <app-navbar></app-navbar>
+    } @else {
+      <app-navbar-logout></app-navbar-logout>
+    }
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<app-sync-progress></app-sync-progress>

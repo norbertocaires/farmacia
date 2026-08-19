@@ -1,0 +1,134 @@
+<div class="dashboard-wrapper">
+  <header class="filter-bar">
+    <div class="filter-header">
+      <div class="title">
+        <i class="fas fa-users-cog"></i>
+        <span>Gestão de Usuários</span>
+      </div>
+      <div class="results-count">
+        <strong>{{ totalUsers }}</strong> usuários encontrados
+      </div>
+    </div>
+
+    <div class="filter-inputs">
+      <div class="input-group">
+        <label>Pesquisar</label>
+        <input type="text" [(ngModel)]="search.search" (input)="search.page = 1; carregarUsuarios()"
+          placeholder="Nome, e-mail ou registro...">
+      </div>
+    </div>
+  </header>
+
+  <div class="table-container" [class.is-loading]="loading">
+    @if (loading) {
+    <div class="loader-overlay">
+      <div class="spinner-content">
+        <i class="fas fa-circle-notch fa-spin"></i>
+        <span>Carregando...</span>
+      </div>
+    </div>
+    }
+
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Função</th>
+          <th>Status</th>
+          <th class="text-right">Permissões</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users; track user.id) {
+        <tr class="table-row" [class.current-user-row]="user.email === currentUserEmail">
+          <td>
+            <div class="user-info">
+              <span class="user-name">{{ user.name }}</span>
+              <span class="user-email">{{ user.email }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge"
+              [class.super-admin]="user.role === UserRole.SUPER_ADMIN"
+              [class.admin]="user.role === UserRole.ADMIN"
+              [class.farmacia]="user.role === UserRole.FARMACIA">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <div class="status-wrapper" (click)="toggleStatus(user)" style="cursor:pointer">
+              <span class="status-dot" [class.active]="user.isActive"></span>
+              <span class="status-text">{{ user.isActive ? 'Ativo' : 'Inativo' }}</span>
+            </div>
+          </td>
+          <td class="text-right">
+            <button class="btn-edit" (click)="abrirModalPermissoes(user)" [disabled]="user.email === currentUserEmail"
+              title="Editar permissões">
+              <i class="fas fa-shield-alt"></i>
+            </button>
+            @if (isAdmin) {
+              <button class="btn-delete" (click)="deletarUsuario(user)" [disabled]="user.email === currentUserEmail"
+                title="Deletar usuário">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            }
+          </td>
+        </tr>
+        } @empty {
+        @if (!loading) {
+        <tr>
+          <td colspan="4" class="empty-state">
+            <i class="fas fa-user-ghost"></i>
+            <p>Nenhum usuário encontrado.</p>
+          </td>
+        </tr>
+        }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="pagination-bar">
+    <div class="pagination-info">
+      Página <strong>{{ search.page }}</strong> de <strong>{{ totalPages }}</strong>
+      &nbsp;·&nbsp; {{ totalUsers }} registros
+    </div>
+    <div class="pagination-nav">
+      <button class="btn-nav" [disabled]="search.page <= 1" (click)="changePage(1)">
+        <i class="fas fa-angle-double-left"></i>
+      </button>
+      <button class="btn-nav" [disabled]="search.page <= 1" (click)="changePage(search.page - 1)">
+        <i class="fas fa-chevron-left"></i> Anterior
+      </button>
+
+      <div class="page-indicator">
+        <input type="number" [(ngModel)]="search.page" (change)="changePage(search.page)" min="1" [max]="totalPages">
+      </div>
+
+      <button class="btn-nav" [disabled]="search.page >= totalPages" (click)="changePage(search.page + 1)">
+        Próximo <i class="fas fa-chevron-right"></i>
+      </button>
+      <button class="btn-nav" [disabled]="search.page >= totalPages" (click)="changePage(totalPages)">
+        <i class="fas fa-angle-double-right"></i>
+      </button>
+    </div>
+  </footer>
+</div>
+
+<!-- ── CONFIRM DELEÇÃO ───────────────────────────────────── -->
+<app-confirm-dialog
+  [visible]="confirmDialog.visible"
+  [message]="'Deletar ' + (confirmDialog.user?.name ?? '') + '? Esta ação não pode ser desfeita.'"
+  (confirmed)="confirmarDeletar()"
+  (cancelled)="cancelarDeletar()"
+/>
+
+<!-- ── MODAL PERMISSÕES ───────────────────────────────────── -->
+@if (modalVisible && modalUser) {
+  <app-modal-permissoes
+    [user]="modalUser"
+    [saving]="savingRole"
+    (closed)="fecharModal()"
+    (confirmed)="salvarPermissao($event)">
+  </app-modal-permissoes>
+}

@@ -1,0 +1,27 @@
+@if (visible) {
+  <div class="modal-overlay" (click)="cancelled.emit()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <header>
+        <div class="modal-title">
+          <i class="fas fa-triangle-exclamation"></i>
+          <h2>{{ title }}</h2>
+        </div>
+        <button class="close-btn" (click)="cancelled.emit()">×</button>
+      </header>
+
+      <div class="modal-body">
+        <p>{{ message }}</p>
+      </div>
+
+      <footer>
+        <button class="btn-cancel" (click)="cancelled.emit()">{{ cancelLabel }}</button>
+        <button class="btn-danger" (click)="confirmed.emit()">
+          <i class="fas fa-trash-alt"></i>
+          {{ confirmLabel }}
+        </button>
+      </footer>
+
+    </div>
+  </div>
+}

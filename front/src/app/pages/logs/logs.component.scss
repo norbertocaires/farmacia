@@ -1,0 +1,439 @@
+// ── Design System ─────────────────────────────────────────
+$bg-deep:    #0f172a;
+$bg-card:    #1e293b;
+$border:     #334155;
+$primary:    #3b82f6;
+$text-main:  #f8fafc;
+$text-sub:   #cbd5e1;
+$text-muted: #64748b;
+$success:    #22c55e;
+$danger:     #ef4444;
+$warning:    #f59e0b;
+$info:       #06b6d4;
+
+:host {
+  display: block;
+  background-color: $bg-deep;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.dashboard-wrapper {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  // ── Filtros ──────────────────────────────────────────────
+  .filter-bar {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid $border;
+
+      .title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: $text-main;
+        i { color: $primary; }
+      }
+
+      .results-count {
+        font-size: 0.82rem;
+        color: $text-muted;
+        strong { color: $primary; }
+      }
+    }
+
+    .filter-inputs {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-width: 400px;
+        flex: 1;
+        min-width: 220px;
+
+        label {
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: $text-muted;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        input {
+          padding: 0.65rem 0.9rem;
+          background: $bg-deep;
+          border: 1px solid $border;
+          border-radius: 8px;
+          color: $text-main;
+          font-size: 0.9rem;
+          transition: border-color 0.2s, box-shadow 0.2s;
+
+          &::placeholder { color: #475569; }
+
+          &:focus {
+            outline: none;
+            border-color: $primary;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+          }
+        }
+      }
+
+      .filter-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .btn-search, .btn-clear {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.65rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+      }
+
+      .btn-search {
+        background: $primary;
+        color: white;
+
+        &:hover { background: #2563eb; }
+      }
+
+      .btn-clear {
+        background: transparent;
+        border-color: $border;
+        color: $text-muted;
+
+        &:hover {
+          color: $text-main;
+          border-color: $text-muted;
+        }
+      }
+    }
+  }
+
+  // ── Tabela ───────────────────────────────────────────────
+  .table-container {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+
+    .modern-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        background: rgba(0, 0, 0, 0.2);
+
+        th {
+          padding: 0.9rem 1rem;
+          font-size: 0.68rem;
+          font-weight: 600;
+          color: $text-muted;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          border-bottom: 1px solid $border;
+        }
+      }
+
+      .table-row {
+        transition: background 0.15s;
+
+        &:hover { background: rgba(59, 130, 246, 0.05); }
+
+        td {
+          padding: 1rem;
+          border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+          color: $text-sub;
+          vertical-align: middle;
+        }
+      }
+
+      .details-row td {
+        border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        padding: 0;
+      }
+
+      tr:last-child td { border-bottom: none; }
+    }
+  }
+
+  .user-email {
+    font-weight: 700;
+    color: $text-main;
+    font-size: 0.85rem;
+  }
+
+  .col-description {
+    max-width: 320px;
+    .description-text {
+      display: block;
+      font-size: 0.85rem;
+    }
+  }
+
+  .origin-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .ip {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: $text-sub;
+    }
+
+    small {
+      font-size: 0.72rem;
+      color: $text-muted;
+    }
+  }
+
+  .date-text {
+    font-size: 0.82rem;
+    color: $text-muted;
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(100, 116, 139, 0.15);
+    color: $text-muted;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+
+    &.success {
+      background: rgba(34, 197, 94, 0.12);
+      color: $success;
+      border-color: rgba(34, 197, 94, 0.25);
+    }
+
+    &.danger {
+      background: rgba(239, 68, 68, 0.12);
+      color: $danger;
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    &.warning {
+      background: rgba(245, 158, 11, 0.12);
+      color: $warning;
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    &.info {
+      background: rgba(6, 182, 212, 0.12);
+      color: $info;
+      border-color: rgba(6, 182, 212, 0.25);
+    }
+  }
+
+  .btn-toggle {
+    padding: 7px 9px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: $text-muted;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 0.8rem;
+
+    &:hover {
+      color: $primary;
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.25);
+    }
+  }
+
+  .details-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.15);
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      &.full-width { grid-column: 1 / -1; }
+
+      .detail-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .detail-value {
+        font-size: 0.82rem;
+        color: $text-sub;
+        word-break: break-word;
+      }
+
+      .detail-metadata {
+        margin: 0;
+        padding: 10px 12px;
+        background: $bg-deep;
+        border: 1px solid $border;
+        border-radius: 8px;
+        color: $text-sub;
+        font-size: 0.78rem;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+    }
+  }
+
+  // ── Loader ───────────────────────────────────────────────
+  .loader-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+
+    .spinner-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: $primary;
+      i    { font-size: 2rem; }
+      span { font-weight: 600; font-size: 0.9rem; }
+    }
+  }
+
+  // ── Paginação ────────────────────────────────────────────
+  .pagination-bar {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $bg-card;
+    border: 1px solid $border;
+    padding: 0.9rem 1.25rem;
+    border-radius: 12px;
+
+    .pagination-info {
+      font-size: 0.85rem;
+      color: $text-muted;
+      strong { color: $text-sub; }
+    }
+
+    .pagination-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .btn-nav {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        background: $bg-deep;
+        border: 1px solid $border;
+        border-radius: 8px;
+        color: $text-sub;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+          background: $border;
+          color: $text-main;
+        }
+
+        &:disabled { opacity: 0.35; cursor: not-allowed; }
+      }
+
+      .page-indicator input {
+        width: 56px;
+        text-align: center;
+        padding: 6px 4px;
+        background: $bg-deep;
+        border: 1px solid $primary;
+        border-radius: 6px;
+        color: $primary;
+        font-weight: 700;
+        font-size: 0.875rem;
+
+        &:focus { outline: none; }
+      }
+    }
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 20px;
+    text-align: center;
+
+    .empty-icon {
+      width: 72px;
+      height: 72px;
+      background: $bg-deep;
+      border: 1px solid $border;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: $text-muted;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $text-main;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: $text-muted;
+      max-width: 280px;
+    }
+  }
+
+  .text-right { text-align: right; }
+}

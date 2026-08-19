@@ -1,0 +1,532 @@
+// ── Design System ─────────────────────────────────────────
+$bg-deep:       #0f172a;
+$bg-card:       #1e293b;
+$bg-card-hover: #263348;
+$border:        #334155;
+$border-light:  #1e293b;
+$primary:       #3b82f6;
+$primary-dim:   rgba(59, 130, 246, 0.12);
+$text-main:     #f8fafc;
+$text-sub:      #cbd5e1;
+$text-muted:    #64748b;
+$success:       #22c55e;
+$success-dim:   rgba(34, 197, 94, 0.1);
+$danger:        #ef4444;
+$danger-dim:    rgba(239, 68, 68, 0.1);
+$warning:       #f59e0b;
+
+// ── Page Container ────────────────────────────────────────
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+// ── Page Header ───────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+
+  .page-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .page-header-icon {
+      width: 48px;
+      height: 48px;
+      background: $primary-dim;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $primary;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: $text-main;
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 0.82rem;
+      color: $text-muted;
+    }
+  }
+
+  .page-header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+}
+
+// ── Total Badge ───────────────────────────────────────────
+.total-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 8px 16px;
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 10px;
+
+  .total-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .total-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $primary;
+    margin-top: 1px;
+  }
+}
+
+// ── Add Button ────────────────────────────────────────────
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: $primary;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  }
+
+  i { font-size: 0.8rem; }
+}
+
+// ── Filtro de Período ─────────────────────────────────────
+.periodo-filtro {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding: 14px 16px;
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 10px;
+
+  .periodo-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: $text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="date"] {
+      padding: 8px 10px;
+      background: $bg-deep;
+      border: 1px solid $border;
+      border-radius: 8px;
+      color: $text-main;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color-scheme: dark;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+      }
+    }
+  }
+
+  .btn-add {
+    padding: 9px 16px;
+  }
+}
+
+// ── Loading State ─────────────────────────────────────────
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: $text-muted;
+
+  .loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid $border;
+    border-top-color: $primary;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  p { font-size: 0.9rem; }
+}
+
+// ── Empty State ───────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+
+  .empty-icon {
+    width: 72px;
+    height: 72px;
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: $text-muted;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-main;
+  }
+
+  p {
+    margin: 0 0 24px;
+    font-size: 0.875rem;
+    color: $text-muted;
+    max-width: 280px;
+  }
+}
+
+// ── Timeline ──────────────────────────────────────────────
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+// ── Month Header ──────────────────────────────────────────
+.month-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  border-bottom: 1px solid $border;
+
+  &:first-child { margin-top: 0; }
+
+  .month-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: $text-sub;
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    i {
+      color: $primary;
+      font-size: 0.85rem;
+    }
+  }
+
+  .month-total {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .month-total-label {
+      font-size: 0.72rem;
+      color: $text-muted;
+      font-weight: 500;
+    }
+
+    .month-total-value {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: $primary;
+      background: $primary-dim;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+  }
+}
+
+// ── Day Section ───────────────────────────────────────────
+.day-section {
+  margin-bottom: 28px;
+  padding-left: 16px;
+  border-left: 2px solid $border;
+}
+
+.day-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  margin-left: -22px;
+
+  .day-dot {
+    width: 10px;
+    height: 10px;
+    background: $bg-card;
+    border: 2px solid $primary;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+  }
+}
+
+// ── Cards Row ─────────────────────────────────────────────
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+// ── Med Card ──────────────────────────────────────────────
+.med-card {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  &.deleting {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .med-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid $border-light;
+
+    .med-card-icon {
+      width: 36px;
+      height: 36px;
+      background: $primary-dim;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $primary;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .med-card-name {
+      flex: 1;
+      min-width: 0;
+
+      h3 {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: $text-main;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      small {
+        font-size: 0.72rem;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+    }
+
+    .btn-edit {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: $text-muted;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      flex-shrink: 0;
+
+      &:hover:not(:disabled) {
+        background: rgba(99, 102, 241, 0.12);
+        border-color: rgba(99, 102, 241, 0.3);
+        color: #6366f1;
+      }
+
+      &:disabled { cursor: not-allowed; opacity: 0.5; }
+    }
+
+    .btn-remove {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: $text-muted;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+      flex-shrink: 0;
+
+      &:hover:not(:disabled) {
+        background: $danger-dim;
+        border-color: rgba(239, 68, 68, 0.3);
+        color: $danger;
+      }
+
+      &:disabled { cursor: not-allowed; opacity: 0.5; }
+    }
+  }
+
+  .med-card-body {
+    padding: 14px 16px;
+
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 8px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1 1 40%;
+
+      .stat-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .stat-value {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: $text-sub;
+
+        &.highlight {
+          color: $primary;
+          font-size: 1rem;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .posologia-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: $text-muted;
+    border-top: 1px solid rgba(255,255,255,0.05);
+
+    i { font-size: 0.7rem; }
+  }
+
+  .estoque-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-top: 1px solid rgba(255,255,255,0.05);
+
+    &.estoque-ok       { color: #4ade80; background: rgba(74,222,128,0.06); }
+    &.estoque-alerta   { color: #facc15; background: rgba(250,204,21,0.08); }
+    &.estoque-critico  { color: #f97316; background: rgba(249,115,22,0.10); }
+    &.estoque-esgotado { color: #ef4444; background: rgba(239,68,68,0.10); }
+  }
+
+  .med-card-footer {
+    padding: 10px 16px;
+    background: rgba(0, 0, 0, 0.15);
+    border-top: 1px solid $border-light;
+
+    .pmc-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+
+      i { font-size: 0.65rem; }
+
+      &.economia {
+        color: $success;
+        i { color: $success; }
+      }
+
+      &.caro {
+        color: $warning;
+        i { color: $warning; }
+      }
+    }
+  }
+}
+
+// ── Animations ────────────────────────────────────────────
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
