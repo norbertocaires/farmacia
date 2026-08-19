@@ -107,11 +107,13 @@ Variáveis de ambiente (`back/.env`):
 | `JWT_SECRET` | Segredo de assinatura dos tokens — use um valor forte e aleatório em produção |
 | `JWT_EXPIRES_IN` | Validade do token (ex.: `1d`) |
 | `GOOGLE_CLIENT_ID` | Client ID do OAuth do Google (login social) |
-| `ADMIN_USERNAME` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` / `ADMIN_ROLE` | Conta `SuperAdmin` criada automaticamente no primeiro boot, caso ainda não exista |
+| `ADMIN_USERNAME` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` / `ADMIN_ROLE` | Conta `SuperAdmin`: criada no primeiro boot caso ainda não exista, e tem a senha resincronizada com `ADMIN_PASSWORD` a cada novo boot (deploy) |
 
 > Em desenvolvimento, `synchronize: true` (TypeORM) mantém o schema do banco sincronizado com as entidades automaticamente — não há migrations.
 
 > Se `ADMIN_EMAIL`, `ADMIN_USERNAME` ou `ADMIN_PASSWORD` não estiverem definidos, o seed do admin é apenas ignorado (com um log de erro) — não há senha padrão fixa no código.
+>
+> A cada boot da aplicação, a senha do super admin é sobrescrita para o valor atual de `ADMIN_PASSWORD` — trocas manuais de senha desse usuário (direto no banco, ou por vazamento) não sobrevivem a um novo deploy.
 
 Com o servidor rodando, o Swagger fica disponível na raiz: `http://localhost:<PORT>/`.
 

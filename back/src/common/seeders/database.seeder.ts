@@ -36,18 +36,24 @@ export class DatabaseSeeder implements OnApplicationBootstrap {
       return;
     }
 
-    const exists = await this.userRepository.findOne({ where: { email: adminEmail } });
-    if (exists) return;
+    let admin = await this.userRepository.findOne({ where: { email: adminEmail } });
 
-    const admin = await this.userRepository.save(
-      this.userRepository.create({
-        name: adminUsername,
-        email: adminEmail,
-        role: Role.SUPER_ADMIN,
-        isActive: true,
-      }),
-    );
+    if (!admin) {
+      admin = await this.userRepository.save(
+        this.userRepository.create({
+          name: adminUsername,
+          email: adminEmail,
+          role: Role.SUPER_ADMIN,
+          isActive: true,
+        }),
+      );
 
+      this.logger.log(`Usuário admin criado: ${adminEmail}`);
+    }
+
+    // A cada boot, a senha do super admin é realinhada com o ADMIN_PASSWORD do
+    // ambiente atual — evita que uma senha alterada manualmente no banco (ou
+    // vazada) sobreviva a um novo deploy.
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(adminPassword, salt);
 
@@ -56,6 +62,6 @@ export class DatabaseSeeder implements OnApplicationBootstrap {
       userId: admin.id,
     });
 
-    this.logger.log(`Usuário admin criado: ${adminEmail} (senha definida via ADMIN_PASSWORD)`);
+    this.logger.log(`Senha do admin ${adminEmail} sincronizada com ADMIN_PASSWORD.`);
   }
 }
