@@ -105,7 +105,7 @@ $warning:       $danger;
   gap: 8px;
   padding: 10px 18px;
   background: $primary;
-  color: #14110A;
+  color: var(--on-accent);
   border: none;
   border-radius: 10px;
   font-size: 0.875rem;
@@ -477,7 +477,7 @@ $warning:       $danger;
     font-size: 0.75rem;
     font-weight: 500;
     color: $text-muted;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid var(--border-soft);
 
     i { font-size: 0.7rem; }
   }
@@ -489,7 +489,7 @@ $warning:       $danger;
     padding: 6px 16px;
     font-size: 0.75rem;
     font-weight: 500;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid var(--border-soft);
 
     &.estoque-ok       { color: #4ade80; background: rgba(74,222,128,0.06); }
     &.estoque-alerta   { color: #facc15; background: rgba(250,204,21,0.08); }
@@ -499,7 +499,7 @@ $warning:       $danger;
 
   .med-card-footer {
     padding: 10px 16px;
-    background: rgba(0, 0, 0, 0.15);
+    background: var(--bg-surface-2);
     border-top: 1px solid $border-light;
 
     .pmc-badge {

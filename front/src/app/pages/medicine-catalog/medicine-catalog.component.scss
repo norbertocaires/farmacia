@@ -134,7 +134,7 @@ $success:    var(--success);
       text-align: left;
 
       thead {
-        background: rgba(0, 0, 0, 0.2);
+        background: var(--bg-surface-2);
 
         th {
           padding: 0.9rem 1rem;

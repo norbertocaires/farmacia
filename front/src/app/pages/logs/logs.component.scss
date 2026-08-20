@@ -149,7 +149,7 @@ $info:       var(--info);
       border-collapse: collapse;
 
       thead {
-        background: rgba(0, 0, 0, 0.2);
+        background: var(--bg-surface-2);
 
         th {
           padding: 0.9rem 1rem;
@@ -280,7 +280,7 @@ $info:       var(--info);
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     padding: 1rem 1.5rem;
-    background: rgba(0, 0, 0, 0.15);
+    background: var(--bg-surface-2);
 
     .detail-item {
       display: flex;
