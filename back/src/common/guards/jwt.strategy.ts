@@ -24,6 +24,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Usuário inativo. Entre em contato com o administrador.');
     }
 
+    // Amarra o token à senha vigente no momento do login: se a senha foi
+    // trocada depois (troca manual, reset do admin a cada deploy, etc.), o
+    // token antigo perde a validade mesmo antes de expirar.
+    const latestPassword = await this.usersService.getLatestPassword(user.id);
+    if ((latestPassword?.id ?? null) !== payload.pwv) {
+      throw new UnauthorizedException('Sessão expirada: a senha foi alterada. Faça login novamente.');
+    }
+
     return user;
   }
 }

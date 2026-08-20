@@ -133,6 +133,10 @@ export class UsersService {
   }
 
   async updateRole(email: string, role: Role, actorEmail?: string, requestInfo?: RequestInfo) {
+    if (role === Role.SUPER_ADMIN) {
+      throw new BadRequestException('A role SuperAdmin não pode ser atribuída manualmente — defina ADMIN_EMAIL.');
+    }
+
     const user = await this.userRepository.findOneBy({ email });
     if (!user) throw new NotFoundException('Usuário não encontrado!');
 

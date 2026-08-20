@@ -107,13 +107,13 @@ Variáveis de ambiente (`back/.env`):
 | `JWT_SECRET` | Segredo de assinatura dos tokens — use um valor forte e aleatório em produção |
 | `JWT_EXPIRES_IN` | Validade do token (ex.: `1d`) |
 | `GOOGLE_CLIENT_ID` | Client ID do OAuth do Google (login social) |
-| `ADMIN_USERNAME` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` / `ADMIN_ROLE` | Conta `SuperAdmin`: criada no primeiro boot caso ainda não exista, e tem a senha resincronizada com `ADMIN_PASSWORD` a cada novo boot (deploy) |
+| `ADMIN_USERNAME` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Conta `SuperAdmin`: criada no primeiro boot caso ainda não exista, e realinhada (role + senha) com essas variáveis a cada novo boot (deploy) |
 
 > Em desenvolvimento, `synchronize: true` (TypeORM) mantém o schema do banco sincronizado com as entidades automaticamente — não há migrations.
 
 > Se `ADMIN_EMAIL`, `ADMIN_USERNAME` ou `ADMIN_PASSWORD` não estiverem definidos, o seed do admin é apenas ignorado (com um log de erro) — não há senha padrão fixa no código.
 >
-> A cada boot da aplicação, a senha do super admin é sobrescrita para o valor atual de `ADMIN_PASSWORD` — trocas manuais de senha desse usuário (direto no banco, ou por vazamento) não sobrevivem a um novo deploy.
+> A cada boot da aplicação: (1) a senha do super admin é sobrescrita para o valor atual de `ADMIN_PASSWORD` — trocas manuais de senha desse usuário (direto no banco, ou por vazamento) não sobrevivem a um novo deploy — e os tokens JWT emitidos antes disso deixam de ser aceitos (vinculados à versão da senha); (2) só existe **um** `SuperAdmin`, sempre o usuário de `ADMIN_EMAIL` — qualquer outro usuário que tenha essa role (ex.: `ADMIN_EMAIL` mudou, ou alguém alterou direto no banco) é rebaixado automaticamente para `admin`. A API de troca de role (`PATCH /users/:email/role`) nunca aceita atribuir `SuperAdmin` manualmente.
 
 Com o servidor rodando, o Swagger fica disponível na raiz: `http://localhost:<PORT>/`.
 
@@ -135,7 +135,7 @@ ng serve
 
 Acesse `http://localhost:4200/`. A aplicação recarrega automaticamente ao alterar os arquivos-fonte.
 
-As URLs de API/WebSocket ficam em `src/environments/` (`environment.ts`, `environment.development.ts`, `environment.prod.ts`). O `googleClientId` vem vazio nesses arquivos — preencha localmente com o Client ID do seu OAuth do Google antes de rodar (não commitar o valor real). No build via Docker (`environment.docker.ts`), o valor é injetado automaticamente a partir da variável `GOOGLE_CLIENT_ID` do `.env` da raiz, no build do `front` (ver [Dockerfile](front/Dockerfile)).
+As URLs de API/WebSocket ficam em `src/environments/` (`environment.ts`, `environment.development.ts`, `environment.prod.ts`). O `googleClientId` vem vazio em `environment.ts`/`environment.development.ts` — preencha localmente com o Client ID do seu OAuth do Google antes de rodar (não commitar o valor real). Em `environment.docker.ts` e `environment.prod.ts` o campo é o placeholder `__GOOGLE_CLIENT_ID__`, substituído em build-time a partir da variável de ambiente `GOOGLE_CLIENT_ID` (ver [Dockerfile](front/Dockerfile) e [vercel.json](front/vercel.json)).
 
 Build de produção:
 
@@ -143,7 +143,18 @@ Build de produção:
 ng build
 ```
 
-Os artefatos ficam em `dist/`.
+Os artefatos ficam em `dist/farmacia-front/browser/` (a aplicação usa o builder novo do Angular — `dist/farmacia-front/` sozinho não é servível).
+
+#### Deploy no Vercel
+
+O [front/vercel.json](front/vercel.json) já configura build, output e o rewrite de SPA (toda rota cai em `index.html`, senão refresh em `/dashboard` etc. dá 404). No painel do Vercel:
+
+1. **Root Directory:** `front` (é um monorepo — sem isso o Vercel tenta buildar a raiz do repo).
+2. **Framework Preset:** Angular (o Vercel detecta pelo `angular.json`; se detectar errado, force `Other` — o `vercel.json` já define build/output command).
+3. **Environment Variables:** adicione `GOOGLE_CLIENT_ID` com o Client ID do OAuth do Google — é lido pelo `buildCommand` do `vercel.json` em build-time, mesma mecânica do Docker.
+4. **Backend:** `apiUrl`/`socketUrl` de `environment.prod.ts` apontam pra URL fixa do backend (hoje no Render) — se essa URL mudar, precisa editar o arquivo e fazer novo deploy.
+
+> Depois do primeiro deploy, atualize `FRONTEND_URL` no backend (Render) para a URL gerada pelo Vercel — o CORS do back ([main.ts](back/src/main.ts)) só libera essa origem exata, então sem isso a API bloqueia todas as requisições do front em produção.
 
 Testes:
 

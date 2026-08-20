@@ -64,12 +64,15 @@ export class AuthService {
       requestInfo,
     });
 
-    // 4. Gera o Token incluindo o ID no campo 'sub'
+    // 4. Gera o Token incluindo o ID no campo 'sub' e a versão da senha usada
+    // no login (pwv) — permite invalidar o token se a senha for trocada depois
+    // (ex.: reset da senha do admin a cada deploy), mesmo antes de expirar.
     const payload = {
       sub: user.id,      // O ID numérico aqui é o padrão (Subject)
       email: user.email,
       name: user.name,
-      role: user.role
+      role: user.role,
+      pwv: latestPassword.id,
     };
 
     return {
@@ -116,7 +119,14 @@ export class AuthService {
       requestInfo,
     });
 
-    const jwtPayload = { sub: user.id, email: user.email, name: user.name, role: user.role };
+    const latestPassword = await this.usersService.getLatestPassword(user.id);
+    const jwtPayload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      pwv: latestPassword?.id ?? null,
+    };
 
     return {
       access_token: await this.jwtService.signAsync(jwtPayload),

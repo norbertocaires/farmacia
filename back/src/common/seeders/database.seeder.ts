@@ -1,6 +1,6 @@
 import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../../modules/users/entities/user.entity';
 import { PasswordHistory } from '../../modules/users/entities/password-history.entity';
@@ -36,6 +36,17 @@ export class DatabaseSeeder implements OnApplicationBootstrap {
       return;
     }
 
+    // Só pode existir um SuperAdmin, e é sempre o do ADMIN_EMAIL atual — se o
+    // e-mail mudou desde o último deploy (ou algum outro usuário virou
+    // SuperAdmin por fora), rebaixa qualquer outro portador da role.
+    const demoted = await this.userRepository.update(
+      { role: Role.SUPER_ADMIN, email: Not(adminEmail) },
+      { role: Role.ADMIN },
+    );
+    if (demoted.affected) {
+      this.logger.warn(`${demoted.affected} usuário(s) rebaixado(s) de SuperAdmin (só ${adminEmail} pode ter essa role).`);
+    }
+
     let admin = await this.userRepository.findOne({ where: { email: adminEmail } });
 
     if (!admin) {
@@ -49,6 +60,11 @@ export class DatabaseSeeder implements OnApplicationBootstrap {
       );
 
       this.logger.log(`Usuário admin criado: ${adminEmail}`);
+    } else if (admin.role !== Role.SUPER_ADMIN || !admin.isActive) {
+      await this.userRepository.update(admin.id, { role: Role.SUPER_ADMIN, isActive: true });
+      admin.role = Role.SUPER_ADMIN;
+      admin.isActive = true;
+      this.logger.log(`Usuário ${adminEmail} promovido/reativado a SuperAdmin.`);
     }
 
     // A cada boot, a senha do super admin é realinhada com o ADMIN_PASSWORD do

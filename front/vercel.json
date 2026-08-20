@@ -1,0 +1,7 @@
+{
+  "buildCommand": "sed -i \"s|__GOOGLE_CLIENT_ID__|$GOOGLE_CLIENT_ID|\" src/environments/environment.prod.ts && npm run build",
+  "outputDirectory": "dist/farmacia-front/browser",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsIn, IsNotEmpty } from 'class-validator';
 import { Role } from '../../../common/enums/role.enum';
 
+// SuperAdmin nunca é atribuível manualmente: só existe um, definido por
+// ADMIN_EMAIL e controlado pelo DatabaseSeeder.
+const ASSIGNABLE_ROLES = [Role.ADMIN, Role.FARMACIA, Role.USUARIO];
+
 export class UpdateRoleDto {
-  @ApiProperty({ enum: Role, example: Role.FARMACIA })
+  @ApiProperty({ enum: ASSIGNABLE_ROLES, example: Role.FARMACIA })
   @IsNotEmpty({ message: 'A role é obrigatória.' })
-  @IsEnum(Role, { message: 'Role inválida.' })
+  @IsIn(ASSIGNABLE_ROLES, { message: 'Role inválida.' })
   role: Role;
 }
