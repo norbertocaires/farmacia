@@ -1,18 +1,18 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:       #0A0D14;
-$bg-card:       #12151F;
-$bg-card-hover: #1A1E2B;
-$border:        #262B3A;
-$border-light:  #1C202D;
-$primary:       #D4A857;
-$primary-dim:   rgba(212, 168, 87, 0.12);
-$text-main:     #F4F1EA;
-$text-sub:      #9A9CAE;
-$text-muted:    #5C5F72;
-$success:       #6FCF97;
-$success-dim:   rgba(111, 207, 151, 0.1);
-$danger:        #E5735A;
-$danger-dim:    rgba(229, 115, 90, 0.1);
+$bg-deep:       var(--bg-page);
+$bg-card:       var(--bg-surface);
+$bg-card-hover: var(--bg-surface-2);
+$border:        var(--border);
+$border-light:  var(--border-soft);
+$primary:       var(--accent);
+$primary-dim:   var(--accent-dim);
+$text-main:     var(--text-primary);
+$text-sub:      var(--text-secondary);
+$text-muted:    var(--text-tertiary);
+$success:       var(--success);
+$success-dim:   var(--success-dim);
+$danger:        var(--danger);
+$danger-dim:    var(--danger-dim);
 $warning:       $danger;
 
 // ── Page Container ────────────────────────────────────────
@@ -114,7 +114,7 @@ $warning:       $danger;
   transition: all 0.2s;
 
   &:hover {
-    background: #E3BA6E;
+    background: var(--accent-hover);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(212, 168, 87, 0.3);
   }
@@ -155,7 +155,6 @@ $warning:       $danger;
       color: $text-main;
       font-size: 0.85rem;
       font-family: inherit;
-      color-scheme: dark;
 
       &:focus {
         outline: none;

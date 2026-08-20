@@ -1,13 +1,13 @@
-$bg-deep:     #0A0D14;
-$bg-card:     #12151F;
-$border:      #262B3A;
-$border-soft: #1C202D;
-$accent:      #D4A857;
-$accent-hover:#E3BA6E;
-$text-main:   #F4F1EA;
-$text-sub:    #9A9CAE;
-$text-faint:  #5C5F72;
-$danger:      #E5735A;
+$bg-deep:     var(--bg-page);
+$bg-card:     var(--bg-surface);
+$border:      var(--border);
+$border-soft: var(--border-soft);
+$accent:      var(--accent);
+$accent-hover:var(--accent-hover);
+$text-main:   var(--text-primary);
+$text-sub:    var(--text-secondary);
+$text-faint:  var(--text-tertiary);
+$danger:      var(--danger);
 
 .profile-container {
   display: flex;
@@ -88,7 +88,7 @@ $danger:      #E5735A;
       width: 100%;
       padding: 0.85rem;
       background-color: $accent;
-      color: #14110A;
+      color: var(--on-accent);
       border: none;
       border-radius: 11px;
       font-size: 0.9rem;

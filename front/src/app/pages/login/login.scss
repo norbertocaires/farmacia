@@ -1,12 +1,12 @@
-$bg-deep:     #0A0D14;
-$bg-card:     #12151F;
-$border:      #262B3A;
-$border-soft: #1C202D;
-$accent:      #D4A857;
-$accent-hover:#E3BA6E;
-$text-main:   #F4F1EA;
-$text-sub:    #9A9CAE;
-$text-faint:  #5C5F72;
+$bg-deep:     var(--bg-page);
+$bg-card:     var(--bg-surface);
+$border:      var(--border);
+$border-soft: var(--border-soft);
+$accent:      var(--accent);
+$accent-hover:var(--accent-hover);
+$text-main:   var(--text-primary);
+$text-sub:    var(--text-secondary);
+$text-faint:  var(--text-tertiary);
 
 .auth-container {
   display: flex;
@@ -15,7 +15,7 @@ $text-faint:  #5C5F72;
   min-height: 100vh;
   padding: 20px;
   background:
-    radial-gradient(560px 420px at 18% 12%, rgba(212, 168, 87, 0.10), transparent 60%),
+    radial-gradient(560px 420px at 18% 12%, var(--accent-dim), transparent 60%),
     radial-gradient(640px 480px at 85% 88%, rgba(111, 140, 207, 0.06), transparent 60%),
     $bg-deep;
 
@@ -97,7 +97,7 @@ $text-faint:  #5C5F72;
 
           &:focus {
             border-color: $accent;
-            box-shadow: 0 0 0 3px rgba(212, 168, 87, 0.15);
+            box-shadow: 0 0 0 3px var(--accent-dim);
           }
         }
       }

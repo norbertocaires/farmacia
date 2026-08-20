@@ -1,11 +1,11 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:    #0A0D14;
-$bg-card:    #12151F;
-$border:     #262B3A;
-$primary:    #D4A857;
-$text-main:  #F4F1EA;
-$text-muted: #5C5F72;
-$success:    #6FCF97;
+$bg-deep:    var(--bg-page);
+$bg-card:    var(--bg-surface);
+$border:     var(--border);
+$primary:    var(--accent);
+$text-main:  var(--text-primary);
+$text-muted: var(--text-tertiary);
+$success:    var(--success);
 
 :host {
   display: block;
@@ -84,7 +84,7 @@ $success:    #6FCF97;
     width: 100%;
     padding: 12px;
     background: $primary;
-    color: #14110A;
+    color: var(--on-accent);
     border: none;
     border-radius: 10px;
     font-weight: 600;
@@ -93,7 +93,7 @@ $success:    #6FCF97;
     transition: all 0.2s;
 
     &:hover:not(:disabled) {
-      background: #E3BA6E;
+      background: var(--accent-hover);
       transform: translateY(-1px);
     }
 

@@ -1,11 +1,11 @@
-$bg-card:     #12151F;
-$bg-card-2:   #1A1E2B;
-$border:      #262B3A;
-$border-soft: #1C202D;
-$accent:      #D4A857;
-$text-main:   #F4F1EA;
-$text-sub:    #9A9CAE;
-$danger:      #E5735A;
+$bg-card:     var(--bg-surface);
+$bg-card-2:   var(--bg-surface-2);
+$border:      var(--border);
+$border-soft: var(--border-soft);
+$accent:      var(--accent);
+$text-main:   var(--text-primary);
+$text-sub:    var(--text-secondary);
+$danger:      var(--danger);
 
 .navbar {
   display: flex;
@@ -26,7 +26,7 @@ $danger:      #E5735A;
       height: 32px;
       border-radius: 9px;
       background: $accent;
-      color: #14110A;
+      color: var(--on-accent);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -99,6 +99,23 @@ $danger:      #E5735A;
         flex-shrink: 0;
         border: 1px solid $border;
       }
+    }
+
+    .theme-toggle {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid $border;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: $text-sub;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s, border-color 0.15s;
+
+      &:hover { color: $accent; border-color: $accent; }
     }
 
     .dropdown-container {

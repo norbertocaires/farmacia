@@ -1,15 +1,15 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:    #0A0D14;
-$bg-card:    #12151F;
-$border:     #262B3A;
-$primary:    #D4A857;
-$text-main:  #F4F1EA;
-$text-sub:   #9A9CAE;
-$text-muted: #5C5F72;
-$success:    #6FCF97;
-$danger:     #E5735A;
-$warning:    #D97C4D;
-$info:       #06b6d4;
+$bg-deep:    var(--bg-page);
+$bg-card:    var(--bg-surface);
+$border:     var(--border);
+$primary:    var(--accent);
+$text-main:  var(--text-primary);
+$text-sub:   var(--text-secondary);
+$text-muted: var(--text-tertiary);
+$success:    var(--success);
+$danger:     var(--danger);
+$warning:    var(--warning);
+$info:       var(--info);
 
 :host {
   display: block;
@@ -87,7 +87,7 @@ $info:       #06b6d4;
           font-size: 0.9rem;
           transition: border-color 0.2s, box-shadow 0.2s;
 
-          &::placeholder { color: #5C5F72; }
+          &::placeholder { color: $text-muted; }
 
           &:focus {
             outline: none;
@@ -117,9 +117,9 @@ $info:       #06b6d4;
 
       .btn-search {
         background: $primary;
-        color: #14110A;
+        color: var(--on-accent);
 
-        &:hover { background: #E3BA6E; }
+        &:hover { background: var(--accent-hover); }
       }
 
       .btn-clear {
@@ -321,7 +321,7 @@ $info:       #06b6d4;
   .loader-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(10, 13, 20, 0.7);
+    background: var(--overlay-scrim);
     backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;

@@ -1,16 +1,16 @@
 // Paleta do app
-$bg-deep:     #0A0D14;
-$bg-card:     #12151F;
-$bg-hover:    #1A1E2B;
-$border:      #262B3A;
-$primary:     #D4A857;
-$primary-dark:#E3BA6E;
-$text-main:   #F4F1EA;
-$text-muted:  #9A9CAE;
-$text-faint:  #5C5F72;
-$success:     #6FCF97;
-$success-light:#A8E0BE;
-$danger:      #E5735A;
+$bg-deep:     var(--bg-page);
+$bg-card:     var(--bg-surface);
+$bg-hover:    var(--bg-surface-2);
+$border:      var(--border);
+$primary:     var(--accent);
+$primary-dark:var(--accent-hover);
+$text-main:   var(--text-primary);
+$text-muted:  var(--text-secondary);
+$text-faint:  var(--text-tertiary);
+$success:     var(--success);
+$success-light:var(--success-light);
+$danger:      var(--danger);
 
 .modal-wrapper {
   display: flex;

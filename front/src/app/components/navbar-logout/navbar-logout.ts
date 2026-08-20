@@ -1,6 +1,7 @@
 // src/app/components/navbar-logout/navbar-logout.component.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ThemeService } from '../../common/theme/theme.service';
 
 @Component({
   selector: 'app-navbar-logout',
@@ -10,5 +11,5 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './navbar-logout.scss'
 })
 export class NavbarLogout {
-  // Este componente é focado apenas na navegação inicial
+  themeService = inject(ThemeService);
 }

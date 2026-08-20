@@ -2,6 +2,7 @@ import { Component, computed, ElementRef, HostListener, inject } from '@angular/
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthLogin } from '../../common/auth-login/auth-login';
+import { ThemeService } from '../../common/theme/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +15,7 @@ export class NavbarComponent {
   authLogin = inject(AuthLogin);
   router = inject(Router);
   el = inject(ElementRef);
+  themeService = inject(ThemeService);
 
   menuAberto = false;
   userName = this.authLogin.userName;

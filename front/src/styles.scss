@@ -4,6 +4,76 @@
 /* ── Fontes ───────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
+/* ── Tema (design tokens) ─────────────────────────────── */
+/* Dark é o padrão; [data-theme="light"] na <html> sobrescreve. */
+:root {
+  --bg-page:       #0A0D14;
+  --bg-surface:    #12151F;
+  --bg-surface-2:  #1A1E2B;
+  --bg-surface-3:  #0E1119;
+  --border:        #262B3A;
+  --border-soft:   #1C202D;
+
+  --accent:        #D4A857;
+  --accent-hover:  #E3BA6E;
+  --accent-dim:    rgba(212, 168, 87, 0.12);
+  --on-accent:     #14110A;
+
+  --text-primary:   #F4F1EA;
+  --text-secondary: #9A9CAE;
+  --text-tertiary:  #5C5F72;
+
+  --success:       #6FCF97;
+  --success-light: #A8E0BE;
+  --success-dim:   rgba(111, 207, 151, 0.1);
+  --danger:        #E5735A;
+  --danger-hover:  #D45F45;
+  --danger-dim:    rgba(229, 115, 90, 0.1);
+  --warning:       #D97C4D;
+  --info:          #06B6D4;
+
+  --role-admin:       #8AA6E0;
+  --role-currentuser: #A78BFA;
+  --role-farmacia:    #10B981;
+
+  --overlay-scrim: rgba(10, 13, 20, 0.7);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg-page:       #FAF8F4;
+  --bg-surface:    #FFFFFF;
+  --bg-surface-2:  #F2EEE4;
+  --bg-surface-3:  #EFEADD;
+  --border:        #E6E1D4;
+  --border-soft:   #EFEBDF;
+
+  --accent:        #B8863E;
+  --accent-hover:  #A67735;
+  --accent-dim:    rgba(184, 134, 62, 0.12);
+  --on-accent:     #14110A;
+
+  --text-primary:   #211D14;
+  --text-secondary: #5C5847;
+  --text-tertiary:  #8B876F;
+
+  --success:       #2F9E63;
+  --success-light: #1F7A4C;
+  --success-dim:   rgba(47, 158, 99, 0.1);
+  --danger:        #C24A30;
+  --danger-hover:  #A63A22;
+  --danger-dim:    rgba(194, 74, 48, 0.1);
+  --warning:       #B85A2B;
+  --info:          #0891A8;
+
+  --role-admin:       #3D5FA8;
+  --role-currentuser: #6D46D6;
+  --role-farmacia:    #0D9268;
+
+  --overlay-scrim: rgba(255, 255, 255, 0.75);
+  color-scheme: light;
+}
+
 /* ── Reset ────────────────────────────────────────────── */
 *, *::before, *::after {
   margin: 0;
@@ -14,10 +84,11 @@
 /* ── Base ─────────────────────────────────────────────── */
 body {
   font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
-  background-color: #0A0D14;
-  color: #F4F1EA;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -26,9 +97,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Scrollbar global ─────────────────────────────────── */
 ::-webkit-scrollbar       { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #0A0D14; }
-::-webkit-scrollbar-thumb { background: #262B3A; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #363C4F; }
+::-webkit-scrollbar-track { background: var(--bg-page); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
 /* ── Angular Material — Dialog escuro ────────────────── */
 .cdk-overlay-pane {

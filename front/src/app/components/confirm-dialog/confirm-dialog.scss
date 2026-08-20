@@ -1,11 +1,11 @@
-$bg-card:    #12151F;
-$bg-footer:  #0E1119;
-$border:     #262B3A;
-$primary:    #D4A857;
-$danger:     #E5735A;
-$danger-dark:#D45F45;
-$text-main:  #F4F1EA;
-$text-muted: #9A9CAE;
+$bg-card:    var(--bg-surface);
+$bg-footer:  var(--bg-surface-3);
+$border:     var(--border);
+$primary:    var(--accent);
+$danger:     var(--danger);
+$danger-dark:var(--danger-hover);
+$text-main:  var(--text-primary);
+$text-muted: var(--text-secondary);
 
 .modal-overlay {
   position: fixed;

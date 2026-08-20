@@ -1,12 +1,12 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:    #0A0D14;
-$bg-card:    #12151F;
-$border:     #262B3A;
-$primary:    #D4A857;
-$text-main:  #F4F1EA;
-$text-sub:   #9A9CAE;
-$text-muted: #5C5F72;
-$success:    #6FCF97;
+$bg-deep:    var(--bg-page);
+$bg-card:    var(--bg-surface);
+$border:     var(--border);
+$primary:    var(--accent);
+$text-main:  var(--text-primary);
+$text-sub:   var(--text-secondary);
+$text-muted: var(--text-tertiary);
+$success:    var(--success);
 
 :host {
   display: block;
@@ -75,7 +75,7 @@ $success:    #6FCF97;
         &:hover {
           background: rgba(229, 115, 90, 0.08);
           border-color: rgba(229, 115, 90, 0.3);
-          color: #E5735A;
+          color: var(--danger);
         }
       }
     }
@@ -107,7 +107,7 @@ $success:    #6FCF97;
           font-size: 0.875rem;
           transition: border-color 0.2s, box-shadow 0.2s;
 
-          &::placeholder { color: #5C5F72; }
+          &::placeholder { color: $text-muted; }
 
           &:focus {
             outline: none;
@@ -190,7 +190,7 @@ $success:    #6FCF97;
         .reg-info {
           display: flex;
           flex-direction: column;
-          code  { font-family: monospace; color: #a78bfa; font-size: 0.82rem; }
+          code  { font-family: monospace; color: var(--role-currentuser); font-size: 0.82rem; }
           small { color: $text-muted; margin-top: 2px; font-size: 0.72rem; }
         }
 
@@ -264,7 +264,7 @@ $success:    #6FCF97;
   .loader-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(10, 13, 20, 0.7);
+    background: var(--overlay-scrim);
     backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;

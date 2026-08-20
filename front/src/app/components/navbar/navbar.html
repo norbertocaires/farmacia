@@ -29,6 +29,14 @@
       }
     </div>
 
+    <button class="theme-toggle" (click)="themeService.toggle()" [title]="themeService.isLight() ? 'Tema escuro' : 'Tema claro'">
+      @if (themeService.isLight()) {
+        <i class="fas fa-moon"></i>
+      } @else {
+        <i class="fas fa-sun"></i>
+      }
+    </button>
+
     <div class="dropdown-container">
       <button class="settings-btn" (click)="toggleMenu()" title="Configurações">
         <i class="fas fa-gear"></i>
