@@ -120,26 +120,28 @@
     <div class="pagination-info">
       Mostrando página <strong>{{ filtros.page }}</strong> de <strong>{{ lastPage }}</strong>
     </div>
-    
+
+    <app-page-size-select [limit]="limit" (changed)="onLimitChange($event)" />
+
     <div class="pagination-nav">
       <button class="btn-nav" (click)="changePage(1)" [disabled]="filtros.page === 1">
-        <i class="fas fa-angle-double-left"></i> Primeira
+        <i class="fas fa-angle-double-left"></i> <span>Primeira</span>
       </button>
-      
+
       <button class="btn-nav" (click)="changePage(filtros.page - 1)" [disabled]="filtros.page === 1">
-        <i class="fas fa-angle-left"></i> Anterior
+        <i class="fas fa-angle-left"></i> <span>Anterior</span>
       </button>
-      
+
       <div class="page-indicator">
         <input type="number" [(ngModel)]="filtros.page" (change)="changePage(filtros.page)" min="1" [max]="lastPage">
       </div>
 
       <button class="btn-nav" (click)="changePage(filtros.page + 1)" [disabled]="filtros.page === lastPage">
-        Próxima <i class="fas fa-angle-right"></i>
+        <span>Próxima</span> <i class="fas fa-angle-right"></i>
       </button>
 
       <button class="btn-nav" (click)="changePage(lastPage)" [disabled]="filtros.page === lastPage">
-        Última <i class="fas fa-angle-double-right"></i>
+        <span>Última</span> <i class="fas fa-angle-double-right"></i>
       </button>
     </div>
   </footer>

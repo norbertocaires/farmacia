@@ -1,0 +1,31 @@
+$border:     var(--border);
+$bg-deep:    var(--bg-page);
+$text-main:  var(--text-primary);
+$text-muted: var(--text-tertiary);
+$accent:     var(--accent);
+
+.page-size-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: $text-muted;
+  white-space: nowrap;
+
+  select {
+    padding: 5px 8px;
+    background: $bg-deep;
+    border: 1px solid $border;
+    border-radius: 8px;
+    color: $text-main;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: $accent;
+    }
+  }
+}

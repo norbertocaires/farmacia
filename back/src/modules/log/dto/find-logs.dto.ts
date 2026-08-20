@@ -12,6 +12,6 @@ export class FindLogsDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(10, { message: 'O limite máximo por página é 10.' })
+  @Max(100, { message: 'O limite máximo por página é 100.' })
   limit?: number;
 }

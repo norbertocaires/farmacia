@@ -15,7 +15,9 @@ describe('NavbarComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+      // Rota coringa: alguns testes clicam num <a routerLink>, que dispara navegação
+      // de verdade — sem isso o router loga "no match" pra qualquer destino.
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([{ path: '**', component: NavbarComponent }])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
@@ -45,5 +47,38 @@ describe('NavbarComponent', () => {
     expect(component.menuAberto).toBe(true);
     component.toggleMenu();
     expect(component.menuAberto).toBe(false);
+  });
+
+  it('should toggle the mobile hamburger nav menu', () => {
+    expect(component.navMenuAberto).toBe(false);
+    component.toggleNavMenu();
+    expect(component.navMenuAberto).toBe(true);
+    component.toggleNavMenu();
+    expect(component.navMenuAberto).toBe(false);
+  });
+
+  it('should close the mobile nav menu when a nav link inside it is clicked', () => {
+    fixture.detectChanges();
+    const hamburgerBtn: HTMLButtonElement = fixture.nativeElement.querySelector('.hamburger-btn');
+    hamburgerBtn.click();
+    fixture.detectChanges();
+    expect(component.navMenuAberto).toBe(true);
+
+    const link: HTMLAnchorElement = fixture.nativeElement.querySelector('nav.menu a');
+    link.click();
+    fixture.detectChanges();
+
+    expect(component.navMenuAberto).toBe(false);
+  });
+
+  it('should render a hamburger button that opens the mobile nav panel', () => {
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('.hamburger-btn');
+    expect(button).toBeTruthy();
+
+    button.click();
+    fixture.detectChanges();
+
+    expect(component.navMenuAberto).toBe(true);
+    expect(fixture.nativeElement.querySelector('nav.menu.open')).toBeTruthy();
   });
 });

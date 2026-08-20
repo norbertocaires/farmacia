@@ -3,11 +3,12 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LogsService } from './services/logs.service';
 import { ActivityLog } from './dto/activity-log.dto';
+import { PageSizeSelectComponent } from '../../components/page-size-select/page-size-select.component';
 
 @Component({
   selector: 'app-logs',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PageSizeSelectComponent],
   templateUrl: './logs.component.html',
   styleUrl: './logs.component.scss'
 })
@@ -72,6 +73,12 @@ export class LogsComponent implements OnInit {
 
   limparBusca(): void {
     this.searchEmail = '';
+    this.page = 1;
+    this.carregarLogs();
+  }
+
+  onLimitChange(newLimit: number): void {
+    this.limit = newLimit;
     this.page = 1;
     this.carregarLogs();
   }

@@ -5,13 +5,14 @@ import { Subject, debounceTime } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { SHARED_IMPORTS } from '@shareImports/shared-imports';
 import { GetMedicinesFilterDto } from './dto/get-medicines-filter.dto'
+import { PageSizeSelectComponent } from '../../components/page-size-select/page-size-select.component';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
   templateUrl: './medicine-catalog.component.html',
   styleUrl: './medicine-catalog.component.scss',
-    imports: [SHARED_IMPORTS],
+    imports: [SHARED_IMPORTS, PageSizeSelectComponent],
 })
 export class MedicineCatalogComponent implements OnInit {
   private medService = inject(MedicineCatalogService);
@@ -58,6 +59,13 @@ export class MedicineCatalogComponent implements OnInit {
     this.filtros.page = Math.min(Math.max(newPage, 1), this.lastPage);
     this.carregarCatalogo();
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Experiência melhor para o usuário
+  }
+
+  onLimitChange(newLimit: number) {
+    this.limit = newLimit;
+    this.filtros.limit = newLimit;
+    this.filtros.page = 1;
+    this.carregarCatalogo();
   }
 
   private carregarCatalogo() {

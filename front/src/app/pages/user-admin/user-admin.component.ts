@@ -8,11 +8,12 @@ import { User, UserRole } from './dto/User';
 import { AuthLogin } from '../../common/auth-login/auth-login';
 import { ModalPermissoesComponent } from '../../components/modal-permissoes/modal-permissoes.component';
 import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog';
+import { PageSizeSelectComponent } from '../../components/page-size-select/page-size-select.component';
 
 @Component({
     selector: 'app-user-admin',
     standalone: true,
-    imports: [CommonModule, FormsModule, ModalPermissoesComponent, ConfirmDialogComponent],
+    imports: [CommonModule, FormsModule, ModalPermissoesComponent, ConfirmDialogComponent, PageSizeSelectComponent],
     templateUrl: './user-admin.component.html',
     styleUrl: './user-admin.component.scss'
 })
@@ -81,6 +82,12 @@ export class UserAdminComponent implements OnInit {
         // Trava dentro do intervalo válido em vez de ignorar — o input numérico de
         // página é editável livremente e pode chegar aqui com um valor fora do range.
         this.search.page = Math.min(Math.max(page, 1), this.totalPages);
+        this.carregarUsuarios();
+    }
+
+    onLimitChange(newLimit: number) {
+        this.search.limit = newLimit;
+        this.search.page = 1;
         this.carregarUsuarios();
     }
 

@@ -457,7 +457,19 @@ $info:       var(--info);
       align-items: stretch;
       gap: 10px;
 
-      .pagination-nav { justify-content: space-between; }
+      .page-size-select { align-self: flex-start; }
+
+      .pagination-nav {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 6px;
+
+        .btn-nav {
+          padding: 6px 9px;
+
+          span { display: none; }
+        }
+      }
     }
   }
 }

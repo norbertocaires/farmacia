@@ -21,7 +21,7 @@ export class FindUsersDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(10, { message: 'O limite máximo por página é 10.' })
+  @Max(100, { message: 'O limite máximo por página é 100.' })
   limit?: number;
 
   @ApiPropertyOptional({ example: true, description: 'Filtrar por usuários ativos (true) ou inativos (false). Omitir para retornar todos.' })

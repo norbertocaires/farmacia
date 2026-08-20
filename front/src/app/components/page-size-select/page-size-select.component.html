@@ -1,0 +1,8 @@
+<label class="page-size-select">
+  <span>Itens por página</span>
+  <select [ngModel]="limit" (ngModelChange)="onSelect($event)">
+    @for (opt of options; track opt) {
+      <option [value]="opt">{{ opt }}</option>
+    }
+  </select>
+</label>
