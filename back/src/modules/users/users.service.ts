@@ -84,12 +84,17 @@ export class UsersService {
 
     if(user.role == Role.SUPER_ADMIN) throw new ConflictException('Usuário não pode ser editado!');
 
+    // pwv (versão da senha) do token novo — parte da senha atual, ou da que
+    // acabou de ser trocada abaixo. Sem isso, o JwtStrategy rejeitaria o
+    // próprio token emitido por essa edição de perfil (ver pwv em auth.service.ts).
+    let latestPassword = await this.getLatestPassword(user.id);
+
     // 1. Se houver troca de senha, salva no HISTÓRICO
     if (password) {
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      await this.passwordHistoryRepository.save({
+      latestPassword = await this.passwordHistoryRepository.save({
         passwordHash: hashedPassword,
         userId: user.id
       });
@@ -118,7 +123,8 @@ export class UsersService {
       sub: updatedUser?.id,      // O ID numérico aqui é o padrão (Subject)
       email: updatedUser?.email,
       name: updatedUser?.name,
-      role: updatedUser?.role
+      role: updatedUser?.role,
+      pwv: latestPassword?.id ?? null,
     };
 
     return {
