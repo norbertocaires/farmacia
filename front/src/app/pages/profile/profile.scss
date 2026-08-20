@@ -16,7 +16,7 @@ $danger:      var(--danger);
   min-height: calc(100vh - 68px);
   padding: 40px 20px;
   background: $bg-deep;
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
 
   .profile-card {
     background: $bg-card;

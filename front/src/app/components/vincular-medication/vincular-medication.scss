@@ -19,7 +19,7 @@ $danger:      var(--danger);
   border-radius: 18px;
   overflow: hidden;
   width: 100%;
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-body);
   position: relative;
 
   // ── Header ───────────────────────────────────────────

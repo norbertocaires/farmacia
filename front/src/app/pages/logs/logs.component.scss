@@ -15,7 +15,7 @@ $info:       var(--info);
   display: block;
   background-color: $bg-deep;
   min-height: 100vh;
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-body);
 }
 
 .dashboard-wrapper {

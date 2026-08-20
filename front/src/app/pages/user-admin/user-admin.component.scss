@@ -13,7 +13,7 @@ $danger:     var(--danger);
   display: block;
   background-color: $bg-deep;
   min-height: 100vh;
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-body);
 }
 
 .dashboard-wrapper {
@@ -132,10 +132,10 @@ $danger:     var(--danger);
         &:last-child td { border-bottom: none; }
 
         &.current-user-row {
-          background: rgba(167, 139, 250, 0.12);
+          background: color-mix(in srgb, var(--role-currentuser) 12%, transparent);
 
           td {
-            border-bottom-color: rgba(167, 139, 250, 0.2);
+            border-bottom-color: color-mix(in srgb, var(--role-currentuser) 20%, transparent);
           }
 
           td:first-child {
@@ -143,7 +143,7 @@ $danger:     var(--danger);
             padding-left: calc(1rem - 3px);
           }
 
-          &:hover { background: rgba(167, 139, 250, 0.2); }
+          &:hover { background: color-mix(in srgb, var(--role-currentuser) 20%, transparent); }
         }
       }
     }
@@ -170,21 +170,21 @@ $danger:     var(--danger);
     border: 1px solid rgba(100, 116, 139, 0.2);
 
     &.admin {
-      background: rgba(138, 166, 224, 0.12);
+      background: color-mix(in srgb, var(--role-admin) 12%, transparent);
       color: var(--role-admin);
-      border-color: rgba(138, 166, 224, 0.25);
+      border-color: color-mix(in srgb, var(--role-admin) 25%, transparent);
     }
 
     &.farmacia {
-      background: rgba(16, 185, 129, 0.12);
+      background: color-mix(in srgb, var(--role-farmacia) 12%, transparent);
       color: var(--role-farmacia);
-      border-color: rgba(16, 185, 129, 0.25);
+      border-color: color-mix(in srgb, var(--role-farmacia) 25%, transparent);
     }
 
     &.super-admin {
-      background: rgba(212, 168, 87, 0.14);
-      color: $primary;
-      border-color: rgba(212, 168, 87, 0.35);
+      background: color-mix(in srgb, var(--role-superadmin) 14%, transparent);
+      color: var(--role-superadmin);
+      border-color: color-mix(in srgb, var(--role-superadmin) 35%, transparent);
     }
   }
 

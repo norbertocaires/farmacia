@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 /* ── Tema (design tokens) ─────────────────────────────── */
-/* Dark é o padrão; [data-theme="light"] na <html> sobrescreve. */
+/* Dark é o padrão; [data-theme="light"|"original"] na <html> sobrescreve. */
 :root {
   --bg-page:       #0A0D14;
   --bg-surface:    #12151F;
@@ -33,11 +33,15 @@
   --info:          #06B6D4;
 
   --role-admin:       #8AA6E0;
+  --role-superadmin:  #D4A857;
   --role-currentuser: #A78BFA;
   --role-farmacia:    #10B981;
 
   --overlay-scrim: rgba(10, 13, 20, 0.7);
   color-scheme: dark;
+
+  --font-body:    'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Sora', 'Segoe UI', Roboto, sans-serif;
 }
 
 :root[data-theme="light"] {
@@ -67,11 +71,54 @@
   --info:          #0891A8;
 
   --role-admin:       #3D5FA8;
+  --role-superadmin:  #B8863E;
   --role-currentuser: #6D46D6;
   --role-farmacia:    #0D9268;
 
   --overlay-scrim: rgba(255, 255, 255, 0.75);
   color-scheme: light;
+
+  --font-body:    'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Sora', 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Tema original (pré-redesign): slate + azul, tipografia de sistema. */
+:root[data-theme="original"] {
+  --bg-page:       #0F172A;
+  --bg-surface:    #1E293B;
+  --bg-surface-2:  #334155;
+  --bg-surface-3:  #161E2E;
+  --border:        #334155;
+  --border-soft:   #1E293B;
+
+  --accent:        #3B82F6;
+  --accent-hover:  #2563EB;
+  --accent-dim:    rgba(59, 130, 246, 0.12);
+  --on-accent:     #FFFFFF;
+
+  --text-primary:   #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-tertiary:  #64748B;
+
+  --success:       #22C55E;
+  --success-light: #86EFAC;
+  --success-dim:   rgba(34, 197, 94, 0.1);
+  --danger:        #EF4444;
+  --danger-hover:  #DC2626;
+  --danger-dim:    rgba(239, 68, 68, 0.1);
+  --warning:       #F59E0B;
+  --info:          #06B6D4;
+
+  --role-admin:       #3B82F6;
+  --role-superadmin:  #EAB308;
+  --role-currentuser: #FB923C;
+  --role-farmacia:    #10B981;
+
+  --overlay-scrim: rgba(15, 23, 42, 0.7);
+  color-scheme: dark;
+
+  --font-body:    'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-heading: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 }
 
 /* ── Reset ────────────────────────────────────────────── */
@@ -83,7 +130,7 @@
 
 /* ── Base ─────────────────────────────────────────────── */
 body {
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-body);
   background-color: var(--bg-page);
   color: var(--text-primary);
   line-height: 1.5;
@@ -92,7 +139,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Sora', 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-heading);
 }
 
 /* ── Scrollbar global ─────────────────────────────────── */

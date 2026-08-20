@@ -5,12 +5,8 @@
   </div>
 
   <div class="navbar-actions">
-    <button class="theme-toggle" (click)="themeService.toggle()" [title]="themeService.isLight() ? 'Tema escuro' : 'Tema claro'">
-      @if (themeService.isLight()) {
-        <i class="fas fa-moon"></i>
-      } @else {
-        <i class="fas fa-sun"></i>
-      }
+    <button class="theme-toggle" (click)="themeService.toggle()" [title]="themeService.nextThemeLabel()">
+      <i class="fas" [class]="themeService.nextThemeIcon()"></i>
     </button>
 
     <a routerLink="/login" routerLinkActive="active" class="btn-login">

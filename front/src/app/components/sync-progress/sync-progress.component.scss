@@ -18,7 +18,7 @@ $success:     var(--success);
   border-radius: 16px;
   padding: 1rem;
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
-  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   transition: opacity 1s ease-out; // Para o efeito de sumir no final
 
   &.fade-out {

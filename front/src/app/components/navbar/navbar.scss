@@ -35,7 +35,7 @@ $danger:      var(--danger);
     }
 
     .brand-name {
-      font-family: 'Sora', sans-serif;
+      font-family: var(--font-heading);
       font-weight: 600;
       color: $text-main;
       font-size: 1.05rem;
@@ -84,7 +84,7 @@ $danger:      var(--danger);
         background: $bg-card-2;
         border: 1px solid $border;
         color: $accent;
-        font-family: 'Sora', sans-serif;
+        font-family: var(--font-heading);
         font-size: 0.8rem;
         font-weight: 600;
         letter-spacing: 0.5px;
