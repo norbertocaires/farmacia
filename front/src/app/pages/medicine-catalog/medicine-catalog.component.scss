@@ -1,18 +1,18 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:    #0f172a;
-$bg-card:    #1e293b;
-$border:     #334155;
-$primary:    #3b82f6;
-$text-main:  #f8fafc;
-$text-sub:   #cbd5e1;
-$text-muted: #64748b;
-$success:    #22c55e;
+$bg-deep:    #0A0D14;
+$bg-card:    #12151F;
+$border:     #262B3A;
+$primary:    #D4A857;
+$text-main:  #F4F1EA;
+$text-sub:   #9A9CAE;
+$text-muted: #5C5F72;
+$success:    #6FCF97;
 
 :host {
   display: block;
   background-color: $bg-deep;
   min-height: 100vh;
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
 }
 
 .dashboard-wrapper {
@@ -73,9 +73,9 @@ $success:    #22c55e;
         transition: all 0.2s;
 
         &:hover {
-          background: rgba(239, 68, 68, 0.08);
-          border-color: rgba(239, 68, 68, 0.3);
-          color: #ef4444;
+          background: rgba(229, 115, 90, 0.08);
+          border-color: rgba(229, 115, 90, 0.3);
+          color: #E5735A;
         }
       }
     }
@@ -107,12 +107,12 @@ $success:    #22c55e;
           font-size: 0.875rem;
           transition: border-color 0.2s, box-shadow 0.2s;
 
-          &::placeholder { color: #475569; }
+          &::placeholder { color: #5C5F72; }
 
           &:focus {
             outline: none;
             border-color: $primary;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 3px rgba(212, 168, 87, 0.15);
           }
         }
       }
@@ -151,11 +151,11 @@ $success:    #22c55e;
         .table-row {
           transition: background 0.15s;
 
-          &:hover { background: rgba(59, 130, 246, 0.05); }
+          &:hover { background: rgba(212, 168, 87, 0.05); }
 
           td {
             padding: 1rem;
-            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            border-bottom: 1px solid rgba(38, 43, 58, 0.5);
             vertical-align: middle;
             color: $text-sub;
           }
@@ -178,9 +178,9 @@ $success:    #22c55e;
         .lab-badge {
           display: inline-block;
           padding: 3px 10px;
-          background: rgba(59, 130, 246, 0.1);
+          background: rgba(212, 168, 87, 0.1);
           color: $primary;
-          border: 1px solid rgba(59, 130, 246, 0.2);
+          border: 1px solid rgba(212, 168, 87, 0.2);
           border-radius: 20px;
           font-size: 0.72rem;
           font-weight: 600;
@@ -264,7 +264,7 @@ $success:    #22c55e;
   .loader-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.7);
+    background: rgba(10, 13, 20, 0.7);
     backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;

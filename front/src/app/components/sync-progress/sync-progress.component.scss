@@ -1,3 +1,10 @@
+$bg-card:     #12151F;
+$border:      #262B3A;
+$accent:      #D4A857;
+$text-main:   #F4F1EA;
+$text-sub:    #9A9CAE;
+$success:     #6FCF97;
+
 .sync-wrapper {
   position: fixed;
   bottom: 1.5rem;
@@ -6,16 +13,17 @@
   z-index: 9999;
   width: 420px;
   max-width: calc(100vw - 2rem);
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: 16px;
   padding: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
   transition: opacity 1s ease-out; // Para o efeito de sumir no final
 
   &.fade-out {
     opacity: 0.9; // Você pode mudar para 0 se quiser que suma totalmente
-    border-color: #48bb78;
+    border-color: $success;
   }
 
   .sync-info {
@@ -27,20 +35,20 @@
     .text-group {
       display: flex;
       flex-direction: column;
-      
+
       .message {
-        color: #2d3748;
+        color: $text-main;
         font-size: 1rem;
       }
       .sub-text {
-        color: #718096;
+        color: $text-sub;
         font-size: 0.8rem;
       }
     }
 
     .count-badge {
-      background: #edf2f7;
-      color: #4a5568;
+      background: rgba(212, 168, 87, 0.12);
+      color: $accent;
       padding: 4px 10px;
       border-radius: 20px;
       font-size: 0.75rem;
@@ -52,36 +60,35 @@
   .progress-track {
     width: 100%;
     height: 18px;
-    background-color: #f1f5f9;
+    background-color: #0A0D14;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
-    border: 1px solid #e2e8f0;
+    border: 1px solid $border;
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #3182ce 0%, #63b3ed 100%);
+      background: linear-gradient(90deg, $accent 0%, #E3BA6E 100%);
       transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
 
       &.finished {
-        background: #48bb78; // Verde quando termina
+        background: $success; // Verde quando termina
       }
 
       .percent-tag {
-        color: white;
+        color: #14110A;
         font-size: 0.7rem;
         font-weight: 800;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
       }
     }
   }
 
   .footer-status {
     margin-top: 0.8rem;
-    color: #2f855a;
+    color: $success;
     font-size: 0.85rem;
     font-weight: 600;
     text-align: center;
@@ -92,7 +99,7 @@
 
     .countdown {
       margin-left: 8px;
-      color: #718096;
+      color: $text-sub;
       font-weight: 400;
       font-size: 0.8rem;
     }

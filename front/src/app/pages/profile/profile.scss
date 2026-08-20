@@ -1,23 +1,37 @@
+$bg-deep:     #0A0D14;
+$bg-card:     #12151F;
+$border:      #262B3A;
+$border-soft: #1C202D;
+$accent:      #D4A857;
+$accent-hover:#E3BA6E;
+$text-main:   #F4F1EA;
+$text-sub:    #9A9CAE;
+$text-faint:  #5C5F72;
+$danger:      #E5735A;
+
 .profile-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: calc(100vh - 68px);
+  padding: 40px 20px;
+  background: $bg-deep;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
 
   .profile-card {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background: $bg-card;
+    padding: 2.25rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px -16px rgba(0, 0, 0, 0.5);
+    border: 1px solid $border-soft;
     width: 100%;
-    max-width: 450px;
+    max-width: 440px;
 
     h2 {
       margin-bottom: 1.5rem;
-      color: #2d3748;
+      color: $text-main;
       text-align: center;
+      font-size: 1.15rem;
       font-weight: 600;
     }
 
@@ -27,61 +41,72 @@
       label {
         display: block;
         margin-bottom: 0.5rem;
-        color: #4a5568;
-        font-size: 0.9rem;
-        font-weight: 500;
+        color: $text-faint;
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
       }
 
       input {
         width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        padding: 0.75rem 1rem;
+        background: $bg-deep;
+        border: 1px solid $border;
+        border-radius: 11px;
+        color: $text-main;
+        font-family: inherit;
+        font-size: 0.9rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
         box-sizing: border-box;
+
+        &::placeholder { color: $text-faint; }
 
         &:focus {
           outline: none;
-          border-color: #4299e1;
-          box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+          border-color: $accent;
+          box-shadow: 0 0 0 3px rgba(212, 168, 87, 0.15);
         }
 
         &:disabled {
-          background-color: #f7fafc;
-          color: #a0aec0;
+          background-color: $border-soft;
+          color: $text-faint;
           cursor: not-allowed;
-          border-color: #edf2f7;
+          border-color: $border-soft;
         }
       }
 
       .error-msg {
-        color: #e53e3e;
-        font-size: 0.8rem;
+        display: block;
+        color: $danger;
+        font-size: 0.78rem;
         margin-top: 0.4rem;
       }
     }
 
     .btn-save {
       width: 100%;
-      padding: 0.75rem;
-      background-color: #3182ce;
-      color: white;
+      padding: 0.85rem;
+      background-color: $accent;
+      color: #14110A;
       border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
+      border-radius: 11px;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.3s ease;
-      margin-top: 1rem;
+      transition: background 0.2s, transform 0.2s;
+      margin-top: 0.5rem;
 
       &:hover:not(:disabled) {
-        background-color: #2b6cb0;
+        background-color: $accent-hover;
+        transform: translateY(-1px);
       }
 
       &:disabled {
-        background-color: #cbd5e0;
+        background-color: $border;
+        color: $text-faint;
         cursor: not-allowed;
+        transform: none;
       }
     }
   }

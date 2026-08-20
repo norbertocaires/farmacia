@@ -1,11 +1,11 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:    #0f172a;
-$bg-card:    #1e293b;
-$border:     #334155;
-$primary:    #3b82f6;
-$text-main:  #f8fafc;
-$text-muted: #64748b;
-$success:    #22c55e;
+$bg-deep:    #0A0D14;
+$bg-card:    #12151F;
+$border:     #262B3A;
+$primary:    #D4A857;
+$text-main:  #F4F1EA;
+$text-muted: #5C5F72;
+$success:    #6FCF97;
 
 :host {
   display: block;
@@ -17,7 +17,7 @@ $success:    #22c55e;
   max-width: 560px;
   margin: 60px auto;
   padding: 0 20px;
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
 
   h2 {
     font-size: 1.3rem;
@@ -57,13 +57,13 @@ $success:    #22c55e;
 
     &:hover {
       border-color: $primary;
-      background: rgba(59, 130, 246, 0.05);
+      background: rgba(212, 168, 87, 0.05);
       i { color: $primary; }
     }
 
     &.dragging {
       border-color: $primary;
-      background: rgba(59, 130, 246, 0.08);
+      background: rgba(212, 168, 87, 0.08);
       transform: scale(1.01);
       i { color: $primary; }
     }
@@ -84,7 +84,7 @@ $success:    #22c55e;
     width: 100%;
     padding: 12px;
     background: $primary;
-    color: white;
+    color: #14110A;
     border: none;
     border-radius: 10px;
     font-weight: 600;
@@ -93,7 +93,7 @@ $success:    #22c55e;
     transition: all 0.2s;
 
     &:hover:not(:disabled) {
-      background: #2563eb;
+      background: #E3BA6E;
       transform: translateY(-1px);
     }
 
