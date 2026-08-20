@@ -51,7 +51,7 @@ describe('App', () => {
   it('should show the logged-in navbar when a session exists', async () => {
     const fixture = TestBed.createComponent(App);
     const authLogin = TestBed.inject(AuthLogin);
-    (authLogin as any).userSignal.set({ id: 1, name: 'Maria', email: 'maria@teste.com', role: 'USUARIO' });
+    (authLogin as any).userSignal.set({ id: 1, name: 'Maria', email: 'maria@teste.com', role: 'usuario' });
     fixture.detectChanges();
     await fixture.whenStable();
 

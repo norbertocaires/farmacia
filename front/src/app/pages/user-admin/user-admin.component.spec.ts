@@ -27,7 +27,7 @@ describe('UserAdminComponent', () => {
 
   beforeEach(async () => {
     localStorage.clear();
-    localStorage.setItem('user_data', JSON.stringify({ id: 2, name: 'Eu Mesmo', email: 'admin@teste.com', role: 'ADMIN' }));
+    localStorage.setItem('user_data', JSON.stringify({ id: 2, name: 'Eu Mesmo', email: 'admin@teste.com', role: 'admin' }));
 
     userAdminService = {
       findAll: vi.fn(() => of({ data: users, total: 2, lastPage: 1 })),

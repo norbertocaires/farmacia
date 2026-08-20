@@ -33,7 +33,7 @@ describe('NavbarComponent', () => {
 
   it('should build user initials from the first and last name', () => {
     const authLogin = TestBed.inject(AuthLogin);
-    (authLogin as any).userSignal.set({ id: 1, name: 'Maria Silva', email: 'maria@teste.com', role: 'ADMIN' });
+    (authLogin as any).userSignal.set({ id: 1, name: 'Maria Silva', email: 'maria@teste.com', role: 'admin' });
     fixture.detectChanges();
 
     expect(component.userInitials()).toBe('MS');

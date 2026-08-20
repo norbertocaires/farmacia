@@ -36,7 +36,7 @@ export class AuthLogin {
   isLoggedIn = computed(() => !!this.userSignal());
   currentUser = computed(() => this.userSignal());
   userName = computed(() => this.userSignal()?.name || 'Usuário');
-  userRole = computed(() => this.userSignal()?.role?.toUpperCase() ?? '');
+  userRole = computed(() => this.userSignal()?.role ?? '');
   isAdmin = computed(() => [UserRole.ADMIN, UserRole.SUPER_ADMIN].includes(this.userRole() as UserRole));
   isFarmacia = computed(() => this.userRole() === UserRole.FARMACIA);
   

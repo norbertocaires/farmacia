@@ -16,7 +16,7 @@ describe('Profile', () => {
 
   beforeEach(async () => {
     localStorage.clear();
-    localStorage.setItem('user_data', JSON.stringify({ id: 1, name: 'Maria', email: 'maria@teste.com', role: 'USUARIO' }));
+    localStorage.setItem('user_data', JSON.stringify({ id: 1, name: 'Maria', email: 'maria@teste.com', role: 'usuario' }));
 
     profileService = { updateProfile: vi.fn(() => of({ access_token: 'novo-token' })) };
     toast = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
@@ -80,7 +80,7 @@ describe('Profile', () => {
       id: 1,
       name: 'Maria Silva',
       email: 'maria@teste.com',
-      role: 'USUARIO',
+      role: 'usuario',
     });
   });
 });

@@ -31,14 +31,14 @@ describe('AuthLogin', () => {
   });
 
   it('should restore the session from localStorage on creation', () => {
-    localStorage.setItem('user_data', JSON.stringify({ id: 1, name: 'Maria', email: 'maria@teste.com', role: 'ADMIN' }));
+    localStorage.setItem('user_data', JSON.stringify({ id: 1, name: 'Maria', email: 'maria@teste.com', role: 'admin' }));
 
     const service = buildService();
     httpMock = TestBed.inject(HttpTestingController);
 
     expect(service.isLoggedIn()).toBe(true);
     expect(service.userName()).toBe('Maria');
-    expect(service.userRole()).toBe('ADMIN');
+    expect(service.userRole()).toBe('admin');
   });
 
   it('should store the session and update signals on login', () => {
@@ -53,7 +53,7 @@ describe('AuthLogin', () => {
 
     expect(service.isLoggedIn()).toBe(true);
     expect(localStorage.getItem('access_token')).toBe('token-abc');
-    expect(service.userRole()).toBe('USUARIO');
+    expect(service.userRole()).toBe('usuario');
     expect(service.isAdmin()).toBe(false);
   });
 
@@ -64,7 +64,7 @@ describe('AuthLogin', () => {
     service.login({ email: 'maria@teste.com', password: '123456' }).subscribe();
     httpMock.expectOne(`${environment.apiUrl}/auth/login`).flush({
       access_token: 'token-abc',
-      user: { id: 1, name: 'Maria', email: 'maria@teste.com', role: 'ADMIN' },
+      user: { id: 1, name: 'Maria', email: 'maria@teste.com', role: 'admin' },
     });
 
     service.logout();
@@ -81,7 +81,7 @@ describe('AuthLogin', () => {
     service.login({ email: 'x@x.com', password: '123456' }).subscribe();
     httpMock.expectOne(`${environment.apiUrl}/auth/login`).flush({
       access_token: 'token',
-      user: { id: 1, name: 'X', email: 'x@x.com', role: 'FARMACIA' },
+      user: { id: 1, name: 'X', email: 'x@x.com', role: 'farmacia' },
     });
 
     expect(service.isAdmin()).toBe(false);

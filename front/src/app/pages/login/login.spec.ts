@@ -55,7 +55,7 @@ describe('LoginComponent', () => {
     component.onLogin();
 
     const req = httpMock.expectOne(`${environment.apiUrl}/auth/login`);
-    req.flush({ access_token: 'token-123', user: { id: 1, name: 'Maria', email: 'maria@teste.com', role: 'USUARIO' } });
+    req.flush({ access_token: 'token-123', user: { id: 1, name: 'Maria', email: 'maria@teste.com', role: 'usuario' } });
 
     expect(navigateSpy).toHaveBeenCalledWith(['/dashboard']);
   });
