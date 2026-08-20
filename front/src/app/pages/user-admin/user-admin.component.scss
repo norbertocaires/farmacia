@@ -1,19 +1,19 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:    #0f172a;
-$bg-card:    #1e293b;
-$border:     #334155;
-$primary:    #3b82f6;
-$text-main:  #f8fafc;
-$text-sub:   #cbd5e1;
-$text-muted: #64748b;
-$success:    #22c55e;
-$danger:     #ef4444;
+$bg-deep:    #0A0D14;
+$bg-card:    #12151F;
+$border:     #262B3A;
+$primary:    #D4A857;
+$text-main:  #F4F1EA;
+$text-sub:   #9A9CAE;
+$text-muted: #5C5F72;
+$success:    #6FCF97;
+$danger:     #E5735A;
 
 :host {
   display: block;
   background-color: $bg-deep;
   min-height: 100vh;
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
 }
 
 .dashboard-wrapper {
@@ -78,12 +78,12 @@ $danger:     #ef4444;
           font-size: 0.9rem;
           transition: border-color 0.2s, box-shadow 0.2s;
 
-          &::placeholder { color: #475569; }
+          &::placeholder { color: #5C5F72; }
 
           &:focus {
             outline: none;
             border-color: $primary;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 3px rgba(212, 168, 87, 0.15);
           }
         }
       }
@@ -120,11 +120,11 @@ $danger:     #ef4444;
       .table-row {
         transition: background 0.15s;
 
-        &:hover { background: rgba(59, 130, 246, 0.05); }
+        &:hover { background: rgba(212, 168, 87, 0.05); }
 
         td {
           padding: 1rem;
-          border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+          border-bottom: 1px solid rgba(38, 43, 58, 0.5);
           color: $text-sub;
           vertical-align: middle;
         }
@@ -132,18 +132,18 @@ $danger:     #ef4444;
         &:last-child td { border-bottom: none; }
 
         &.current-user-row {
-          background: rgba(251, 146, 60, 0.12);
+          background: rgba(167, 139, 250, 0.12);
 
           td {
-            border-bottom-color: rgba(251, 146, 60, 0.2);
+            border-bottom-color: rgba(167, 139, 250, 0.2);
           }
 
           td:first-child {
-            border-left: 3px solid #fb923c;
+            border-left: 3px solid #A78BFA;
             padding-left: calc(1rem - 3px);
           }
 
-          &:hover { background: rgba(251, 146, 60, 0.2); }
+          &:hover { background: rgba(167, 139, 250, 0.2); }
         }
       }
     }
@@ -170,9 +170,9 @@ $danger:     #ef4444;
     border: 1px solid rgba(100, 116, 139, 0.2);
 
     &.admin {
-      background: rgba(59, 130, 246, 0.12);
-      color: $primary;
-      border-color: rgba(59, 130, 246, 0.25);
+      background: rgba(138, 166, 224, 0.12);
+      color: #8AA6E0;
+      border-color: rgba(138, 166, 224, 0.25);
     }
 
     &.farmacia {
@@ -182,9 +182,9 @@ $danger:     #ef4444;
     }
 
     &.super-admin {
-      background: rgba(234, 179, 8, 0.12);
-      color: #eab308;
-      border-color: rgba(234, 179, 8, 0.35);
+      background: rgba(212, 168, 87, 0.14);
+      color: $primary;
+      border-color: rgba(212, 168, 87, 0.35);
     }
   }
 
@@ -201,7 +201,7 @@ $danger:     #ef4444;
 
       &.active {
         background: $success;
-        box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+        box-shadow: 0 0 6px rgba(111, 207, 151, 0.5);
       }
     }
 
@@ -212,7 +212,7 @@ $danger:     #ef4444;
   .loader-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.7);
+    background: rgba(10, 13, 20, 0.7);
     backdrop-filter: blur(2px);
     display: flex;
     justify-content: center;
@@ -312,8 +312,8 @@ $danger:     #ef4444;
 
     &:hover:not(:disabled) {
       color: $primary;
-      background: rgba(59, 130, 246, 0.1);
-      border-color: rgba(59, 130, 246, 0.25);
+      background: rgba(212, 168, 87, 0.1);
+      border-color: rgba(212, 168, 87, 0.25);
     }
 
     &:disabled { opacity: 0.25; cursor: not-allowed; }
@@ -332,8 +332,8 @@ $danger:     #ef4444;
 
     &:hover:not(:disabled) {
       color: $danger;
-      background: rgba(239, 68, 68, 0.1);
-      border-color: rgba(239, 68, 68, 0.25);
+      background: rgba(229, 115, 90, 0.1);
+      border-color: rgba(229, 115, 90, 0.25);
     }
 
     &:disabled { opacity: 0.25; cursor: not-allowed; }

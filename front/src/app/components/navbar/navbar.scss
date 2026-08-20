@@ -1,22 +1,65 @@
+$bg-card:     #12151F;
+$bg-card-2:   #1A1E2B;
+$border:      #262B3A;
+$border-soft: #1C202D;
+$accent:      #D4A857;
+$text-main:   #F4F1EA;
+$text-sub:    #9A9CAE;
+$danger:      #E5735A;
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  height: 60px;
-  background: #1e293b;
-  border-bottom: 1px solid #334155;
+  height: 68px;
+  background: $bg-card;
+  border-bottom: 1px solid $border-soft;
 
-  .logo { font-weight: bold; color: #3b82f6; font-size: 1.2rem; }
-  
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: $accent;
+      color: #14110A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      color: $text-main;
+      font-size: 1.05rem;
+      letter-spacing: 0.2px;
+    }
+  }
+
   .menu {
     display: flex;
-    gap: 20px;
-    a { 
-      color: #94a3b8; 
-      text-decoration: none; 
-      &.active { color: #3b82f6; border-bottom: 2px solid #3b82f6; }
-      &:hover { color: white; } 
+    gap: 4px;
+    a {
+      display: flex;
+      align-items: center;
+      height: 68px;
+      padding: 0 14px;
+      color: $text-sub;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s;
+
+      &.active { color: $text-main; border-bottom-color: $accent; }
+      &:hover { color: $text-main; }
     }
   }
 
@@ -24,7 +67,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    color: #f8fafc;
+    color: $text-main;
 
     .user-avatar {
       display: flex;
@@ -35,23 +78,26 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
-        background: #3b82f6;
-        color: #fff;
-        font-size: 0.85rem;
-        font-weight: 700;
+        background: $bg-card-2;
+        border: 1px solid $border;
+        color: $accent;
+        font-family: 'Sora', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
         letter-spacing: 0.5px;
         flex-shrink: 0;
       }
 
       .user-photo {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         object-fit: cover;
         flex-shrink: 0;
+        border: 1px solid $border;
       }
     }
 
@@ -59,39 +105,58 @@
       position: relative;
 
       .settings-btn {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: transparent;
+        border: 1px solid $border;
+        font-size: 0.95rem;
         cursor: pointer;
-        color: #94a3b8;
-        &:hover { color: white; }
+        color: $text-sub;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.15s, border-color 0.15s;
+
+        &:hover { color: $text-main; border-color: $accent; }
       }
 
       .dropdown-menu {
         position: absolute;
         right: 0;
-        top: 45px;
-        background: #1e293b;
-        border: 1px solid #334155;
-        border-radius: 8px;
-        min-width: 150px;
-        box-shadow: 0 10px 15px rgba(0,0,0,0.5);
+        top: 48px;
+        background: $bg-card;
+        border: 1px solid $border-soft;
+        border-radius: 12px;
+        min-width: 170px;
+        box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
         z-index: 100;
         display: flex;
         flex-direction: column;
+        padding: 6px;
+        gap: 2px;
 
         button {
+          display: flex;
+          align-items: center;
+          gap: 10px;
           background: none;
           border: none;
-          color: #94a3b8;
-          padding: 12px 15px;
+          border-radius: 8px;
+          color: $text-sub;
+          padding: 10px 12px;
           text-align: left;
+          font-size: 0.85rem;
+          font-family: inherit;
           cursor: pointer;
-          &:hover { background: #334155; color: white; }
-          &.logout-item { color: #ef4444; }
+
+          i { width: 14px; text-align: center; font-size: 0.8rem; }
+
+          &:hover { background: $bg-card-2; color: $text-main; }
+          &.logout-item { color: $danger; }
         }
-        
-        .divider { height: 1px; background: #334155; }
+
+        .divider { height: 1px; background: $border-soft; margin: 4px 2px; }
       }
     }
   }

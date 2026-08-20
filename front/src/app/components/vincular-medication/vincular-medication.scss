@@ -1,23 +1,25 @@
 // Paleta do app
-$bg-deep:     #0f172a;
-$bg-card:     #1e293b;
-$bg-hover:    #334155;
-$border:      #334155;
-$primary:     #3b82f6;
-$primary-dark:#2563eb;
-$text-main:   #f8fafc;
-$text-muted:  #94a3b8;
-$success:     #22c55e;
-$danger:      #ef4444;
+$bg-deep:     #0A0D14;
+$bg-card:     #12151F;
+$bg-hover:    #1A1E2B;
+$border:      #262B3A;
+$primary:     #D4A857;
+$primary-dark:#E3BA6E;
+$text-main:   #F4F1EA;
+$text-muted:  #9A9CAE;
+$text-faint:  #5C5F72;
+$success:     #6FCF97;
+$success-light:#A8E0BE;
+$danger:      #E5735A;
 
 .modal-wrapper {
   display: flex;
   flex-direction: column;
   background: $bg-card;
-  border-radius: 12px;
+  border-radius: 18px;
   overflow: hidden;
   width: 100%;
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
   position: relative;
 
   // ── Header ───────────────────────────────────────────
@@ -33,9 +35,9 @@ $danger:      #ef4444;
     .header-icon {
       width: 40px;
       height: 40px;
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 8px;
+      background: rgba(212, 168, 87, 0.15);
+      border: 1px solid rgba(212, 168, 87, 0.3);
+      border-radius: 11px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -127,12 +129,12 @@ $danger:      #ef4444;
 
     &:focus-within {
       border-color: $primary;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      box-shadow: 0 0 0 3px rgba(212, 168, 87, 0.15);
     }
 
     &.has-error {
       border-color: $danger;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      box-shadow: 0 0 0 3px rgba(229, 115, 90, 0.1);
     }
 
     .input-prefix {
@@ -171,7 +173,7 @@ $danger:      #ef4444;
 
     &.with-prefix { padding-left: 4px; }
 
-    &::placeholder { color: #475569; }
+    &::placeholder { color: $text-faint; }
 
     /* Remove setas de number input */
     &[type="number"]::-webkit-inner-spin-button,
@@ -190,9 +192,9 @@ $danger:      #ef4444;
     width: 28px;
     height: 28px;
     margin-right: 4px;
-    background: rgba(59, 130, 246, 0.15);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: 6px;
+    background: rgba(212, 168, 87, 0.15);
+    border: 1px solid rgba(212, 168, 87, 0.3);
+    border-radius: 8px;
     color: $primary;
     cursor: pointer;
     font-size: 0.75rem;
@@ -200,7 +202,7 @@ $danger:      #ef4444;
     flex-shrink: 0;
 
     &:hover {
-      background: rgba(59, 130, 246, 0.25);
+      background: rgba(212, 168, 87, 0.25);
       border-color: $primary;
     }
   }
@@ -295,9 +297,9 @@ $danger:      #ef4444;
 
   // ── Medicine Card ────────────────────────────────────
   .medicine-card {
-    background: rgba(34, 197, 94, 0.07);
-    border: 1px solid rgba(34, 197, 94, 0.2);
-    border-radius: 10px;
+    background: rgba(111, 207, 151, 0.07);
+    border: 1px solid rgba(111, 207, 151, 0.2);
+    border-radius: 14px;
     margin-bottom: 20px;
     overflow: hidden;
     animation: fadeSlideIn 0.25s ease-out;
@@ -307,14 +309,14 @@ $danger:      #ef4444;
       align-items: center;
       gap: 12px;
       padding: 12px 14px;
-      border-bottom: 1px solid rgba(34, 197, 94, 0.12);
+      border-bottom: 1px solid rgba(111, 207, 151, 0.12);
     }
 
     .medicine-card-icon {
       width: 34px;
       height: 34px;
-      background: rgba(34, 197, 94, 0.12);
-      border-radius: 8px;
+      background: rgba(111, 207, 151, 0.12);
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -331,7 +333,7 @@ $danger:      #ef4444;
         display: block;
         font-size: 0.88rem;
         font-weight: 700;
-        color: #86efac;
+        color: $success-light;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -343,9 +345,9 @@ $danger:      #ef4444;
       margin-top: 3px;
       font-size: 0.65rem;
       font-weight: 600;
-      color: rgba(134, 239, 172, 0.7);
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.15);
+      color: rgba(168, 224, 190, 0.7);
+      background: rgba(111, 207, 151, 0.1);
+      border: 1px solid rgba(111, 207, 151, 0.15);
       border-radius: 20px;
       padding: 1px 8px;
       text-transform: uppercase;
@@ -369,8 +371,8 @@ $danger:      #ef4444;
       flex-direction: column;
       gap: 2px;
       padding: 8px 14px;
-      border-bottom: 1px solid rgba(34, 197, 94, 0.08);
-      border-right: 1px solid rgba(34, 197, 94, 0.08);
+      border-bottom: 1px solid rgba(111, 207, 151, 0.08);
+      border-right: 1px solid rgba(111, 207, 151, 0.08);
 
       &:nth-child(even) { border-right: none; }
       &:nth-last-child(-n+2) { border-bottom: none; }
@@ -378,19 +380,19 @@ $danger:      #ef4444;
       .med-detail-label {
         font-size: 0.65rem;
         font-weight: 600;
-        color: rgba(134, 239, 172, 0.5);
+        color: rgba(168, 224, 190, 0.5);
         text-transform: uppercase;
         letter-spacing: 0.4px;
       }
 
       .med-detail-value {
         font-size: 0.78rem;
-        color: rgba(134, 239, 172, 0.85);
+        color: rgba(168, 224, 190, 0.85);
         font-weight: 500;
         line-height: 1.3;
 
         &.pmc {
-          color: #86efac;
+          color: $success-light;
           font-weight: 700;
         }
       }
@@ -440,7 +442,7 @@ $danger:      #ef4444;
       align-items: center;
       gap: 8px;
       padding: 9px 20px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 0.875rem;
       font-weight: 600;
       cursor: pointer;
@@ -462,7 +464,7 @@ $danger:      #ef4444;
 
     .btn-confirm {
       background: $primary;
-      color: white;
+      color: #14110A;
 
       &:hover:not(:disabled) {
         background: $primary-dark;
@@ -483,6 +485,10 @@ $danger:      #ef4444;
   .mat-mdc-dialog-container .mdc-dialog__surface {
     background: transparent !important;
     box-shadow: none !important;
+  }
+
+  .mat-mdc-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: #{$primary};
   }
 }
 

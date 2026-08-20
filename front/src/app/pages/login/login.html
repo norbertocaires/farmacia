@@ -1,7 +1,16 @@
 <main class="auth-container">
   <div class="auth-card">
-    <h1>Login</h1>
-    
+
+    <div class="brand">
+      <div class="brand-mark">
+        <i class="fas fa-capsules"></i>
+      </div>
+      <div class="brand-heading">
+        <h1>Bem-vindo de volta</h1>
+        <p>Entre no Postinho pra acompanhar seus medicamentos</p>
+      </div>
+    </div>
+
     <form (submit)="onLogin()">
       <div class="field">
         <label>Email</label>
@@ -18,7 +27,7 @@
 
     <div class="divider"><span>ou</span></div>
 
-    <asl-google-signin-button type="standard" size="large" locale="pt-BR"></asl-google-signin-button>
+    <asl-google-signin-button type="standard" size="large" theme="filled_black" shape="pill" locale="pt-BR"></asl-google-signin-button>
 
     <p>Não tem uma conta? <a routerLink="/register">Cadastre-se</a></p>
   </div>

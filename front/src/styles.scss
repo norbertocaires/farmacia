@@ -1,6 +1,8 @@
 /* ── Angular Material Theme ───────────────────────────── */
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
+/* ── Fontes ───────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 /* ── Reset ────────────────────────────────────────────── */
 *, *::before, *::after {
@@ -11,18 +13,22 @@
 
 /* ── Base ─────────────────────────────────────────────── */
 body {
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  background-color: #0f172a;
-  color: #f8fafc;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+  background-color: #0A0D14;
+  color: #F4F1EA;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', 'Segoe UI', Roboto, sans-serif;
+}
+
 /* ── Scrollbar global ─────────────────────────────────── */
 ::-webkit-scrollbar       { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #0f172a; }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #475569; }
+::-webkit-scrollbar-track { background: #0A0D14; }
+::-webkit-scrollbar-thumb { background: #262B3A; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #363C4F; }
 
 /* ── Angular Material — Dialog escuro ────────────────── */
 .cdk-overlay-pane {

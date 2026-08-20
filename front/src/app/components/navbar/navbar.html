@@ -1,5 +1,8 @@
 <header class="navbar">
-  <div class="logo">Postinho</div>
+  <div class="brand">
+    <div class="brand-mark"><i class="fas fa-capsules"></i></div>
+    <span class="brand-name">Postinho</span>
+  </div>
 
   <nav class="menu">
     <a routerLink="/dashboard" routerLinkActive="active">Minha medicações</a>
@@ -28,14 +31,14 @@
 
     <div class="dropdown-container">
       <button class="settings-btn" (click)="toggleMenu()" title="Configurações">
-        <i class="gear-icon">⚙️</i>
+        <i class="fas fa-gear"></i>
       </button>
 
       @if (menuAberto) {
       <div class="dropdown-menu">
-        <button (click)="navegarPara('/profile')">👤 Minha Conta</button>
+        <button (click)="navegarPara('/profile')"><i class="fas fa-user"></i> Minha Conta</button>
         <div class="divider"></div>
-        <button class="logout-item" (click)="logout()">🚪 Sair</button>
+        <button class="logout-item" (click)="logout()"><i class="fas fa-right-from-bracket"></i> Sair</button>
       </div>
       }
     </div>

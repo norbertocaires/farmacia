@@ -1,26 +1,26 @@
 // ── Design System ─────────────────────────────────────────
-$bg-deep:       #0f172a;
-$bg-card:       #1e293b;
-$bg-card-hover: #263348;
-$border:        #334155;
-$border-light:  #1e293b;
-$primary:       #3b82f6;
-$primary-dim:   rgba(59, 130, 246, 0.12);
-$text-main:     #f8fafc;
-$text-sub:      #cbd5e1;
-$text-muted:    #64748b;
-$success:       #22c55e;
-$success-dim:   rgba(34, 197, 94, 0.1);
-$danger:        #ef4444;
-$danger-dim:    rgba(239, 68, 68, 0.1);
-$warning:       #f59e0b;
+$bg-deep:       #0A0D14;
+$bg-card:       #12151F;
+$bg-card-hover: #1A1E2B;
+$border:        #262B3A;
+$border-light:  #1C202D;
+$primary:       #D4A857;
+$primary-dim:   rgba(212, 168, 87, 0.12);
+$text-main:     #F4F1EA;
+$text-sub:      #9A9CAE;
+$text-muted:    #5C5F72;
+$success:       #6FCF97;
+$success-dim:   rgba(111, 207, 151, 0.1);
+$danger:        #E5735A;
+$danger-dim:    rgba(229, 115, 90, 0.1);
+$warning:       $danger;
 
 // ── Page Container ────────────────────────────────────────
 .page-container {
-  max-width: 900px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 32px 24px;
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  padding: 40px 32px 80px;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
 }
 
 // ── Page Header ───────────────────────────────────────────
@@ -38,11 +38,11 @@ $warning:       #f59e0b;
     gap: 16px;
 
     .page-header-icon {
-      width: 48px;
-      height: 48px;
-      background: $primary-dim;
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      border-radius: 12px;
+      width: 52px;
+      height: 52px;
+      background: $bg-card;
+      border: 1px solid $border;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -105,7 +105,7 @@ $warning:       #f59e0b;
   gap: 8px;
   padding: 10px 18px;
   background: $primary;
-  color: white;
+  color: #14110A;
   border: none;
   border-radius: 10px;
   font-size: 0.875rem;
@@ -114,9 +114,9 @@ $warning:       #f59e0b;
   transition: all 0.2s;
 
   &:hover {
-    background: #2563eb;
+    background: #E3BA6E;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+    box-shadow: 0 4px 12px rgba(212, 168, 87, 0.3);
   }
 
   i { font-size: 0.8rem; }
@@ -129,10 +129,10 @@ $warning:       #f59e0b;
   gap: 14px;
   flex-wrap: wrap;
   margin-bottom: 28px;
-  padding: 14px 16px;
+  padding: 16px 20px;
   background: $bg-card;
-  border: 1px solid $border;
-  border-radius: 10px;
+  border: 1px solid $border-light;
+  border-radius: 16px;
 
   .periodo-campo {
     display: flex;
@@ -326,15 +326,15 @@ $warning:       #f59e0b;
 // ── Med Card ──────────────────────────────────────────────
 .med-card {
   background: $bg-card;
-  border: 1px solid $border;
-  border-radius: 12px;
+  border: 1px solid $border-light;
+  border-radius: 18px;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 
   &:hover {
     transform: translateY(-2px);
-    border-color: rgba(59, 130, 246, 0.3);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(212, 168, 87, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   }
 
   &.deleting {
@@ -400,9 +400,9 @@ $warning:       #f59e0b;
       flex-shrink: 0;
 
       &:hover:not(:disabled) {
-        background: rgba(99, 102, 241, 0.12);
-        border-color: rgba(99, 102, 241, 0.3);
-        color: #6366f1;
+        background: $primary-dim;
+        border-color: rgba(212, 168, 87, 0.3);
+        color: $primary;
       }
 
       &:disabled { cursor: not-allowed; opacity: 0.5; }

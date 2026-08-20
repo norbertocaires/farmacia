@@ -1,11 +1,11 @@
-$bg-card:    #1e293b;
-$bg-footer:  #161e2e;
-$border:     #334155;
-$primary:    #3b82f6;
-$danger:     #ef4444;
-$danger-dark:#dc2626;
-$text-main:  #f8fafc;
-$text-muted: #94a3b8;
+$bg-card:    #12151F;
+$bg-footer:  #0E1119;
+$border:     #262B3A;
+$primary:    #D4A857;
+$danger:     #E5735A;
+$danger-dark:#D45F45;
+$text-main:  #F4F1EA;
+$text-muted: #9A9CAE;
 
 .modal-overlay {
   position: fixed;
@@ -20,7 +20,7 @@ $text-muted: #94a3b8;
   .modal-card {
     background: $bg-card;
     border: 1px solid $border;
-    border-radius: 12px;
+    border-radius: 16px;
     width: 90%;
     max-width: 420px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
@@ -82,8 +82,8 @@ $text-muted: #94a3b8;
       justify-content: flex-end;
       gap: 0.75rem;
       background: $bg-footer;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
 
       button {
         padding: 0.55rem 1.2rem;
