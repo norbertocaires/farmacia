@@ -495,7 +495,7 @@ $warning:       $danger;
     &.estoque-ok       { color: #4ade80; background: rgba(74,222,128,0.06); }
     &.estoque-alerta   { color: #facc15; background: rgba(250,204,21,0.08); }
     &.estoque-critico  { color: #f97316; background: rgba(249,115,22,0.10); }
-    &.estoque-esgotado { color: #ef4444; background: rgba(239,68,68,0.10); }
+    &.estoque-esgotado { color: $danger; background: rgba(229,115,90,0.10); }
   }
 
   .med-card-footer {

@@ -29,7 +29,7 @@
 
     @if (progress.percent === 100) {
       <div class="footer-status">
-        <i class="check-icon">✔</i> Atualização concluída com sucesso!
+        <i class="fas fa-check-circle check-icon"></i> Atualização concluída com sucesso!
         @if (countdown() !== null) {
           <span class="countdown">Fechando em {{ countdown() }}s</span>
         }
