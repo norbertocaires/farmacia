@@ -111,3 +111,9 @@ $danger:      var(--danger);
     }
   }
 }
+
+// ── Responsivo ────────────────────────────────────────────
+@media (max-width: 480px) {
+  .profile-container { padding: 24px 16px; }
+  .profile-card { padding: 1.75rem 1.5rem; }
+}

@@ -96,11 +96,14 @@ $danger:     var(--danger);
     border: 1px solid $border;
     border-radius: 12px;
     position: relative;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
     min-height: 300px;
 
     .modern-table {
       width: 100%;
+      min-width: 620px;
       border-collapse: collapse;
 
       thead {
@@ -340,3 +343,24 @@ $danger:     var(--danger);
   }
 }
 
+
+// ── Responsivo ────────────────────────────────────────────
+@media (max-width: 640px) {
+  .dashboard-wrapper {
+    padding: 1.25rem 1rem;
+
+    .filter-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .pagination-bar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+
+      .pagination-nav { justify-content: space-between; }
+    }
+  }
+}

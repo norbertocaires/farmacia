@@ -136,3 +136,9 @@ $text-faint:  var(--text-tertiary);
     }
   }
 }
+
+// ── Responsivo ────────────────────────────────────────────
+@media (max-width: 420px) {
+  .auth-container { padding: 12px; }
+  .auth-card { padding: 2rem 1.5rem; }
+}

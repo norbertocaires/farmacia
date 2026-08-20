@@ -105,3 +105,13 @@ $success:    var(--success);
     }
   }
 }
+
+// ── Responsivo ────────────────────────────────────────────
+@media (max-width: 480px) {
+  .upload-container {
+    margin: 32px auto;
+    padding: 0 16px;
+  }
+
+  .drop-zone { padding: 40px 20px; }
+}

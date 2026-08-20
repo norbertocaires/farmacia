@@ -43,6 +43,23 @@ $danger:      var(--danger);
     }
   }
 
+  .hamburger-btn {
+    display: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid $border;
+    font-size: 1rem;
+    cursor: pointer;
+    color: $text-sub;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, border-color 0.15s;
+
+    &:hover { color: $text-main; border-color: $accent; }
+  }
+
   .menu {
     display: flex;
     gap: 4px;
@@ -61,6 +78,45 @@ $danger:      var(--danger);
       &.active { color: $text-main; border-bottom-color: $accent; }
       &:hover { color: $text-main; }
     }
+  }
+
+  @media (max-width: 860px) {
+    padding: 0 16px;
+
+    .brand-name { display: none; }
+
+    .hamburger-btn { display: flex; }
+
+    .menu {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 68px;
+      flex-direction: column;
+      gap: 2px;
+      padding: 8px;
+      background: $bg-card;
+      border-bottom: 1px solid $border-soft;
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
+      z-index: 100;
+
+      &.open { display: flex; }
+
+      a {
+        height: auto;
+        padding: 12px 14px;
+        border-bottom: none;
+        border-radius: 8px;
+
+        &.active { background: $bg-card-2; }
+        &:hover { background: $bg-card-2; }
+      }
+    }
+  }
+
+  @media (max-width: 420px) {
+    .user-actions { gap: 8px; }
   }
 
   .user-actions {

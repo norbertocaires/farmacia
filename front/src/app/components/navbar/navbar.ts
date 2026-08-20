@@ -18,6 +18,7 @@ export class NavbarComponent {
   themeService = inject(ThemeService);
 
   menuAberto = false;
+  navMenuAberto = false;
   userName = this.authLogin.userName;
   userRole = this.authLogin.userRole;
   userPhoto = this.authLogin.userPhoto;
@@ -37,6 +38,10 @@ export class NavbarComponent {
     this.menuAberto = !this.menuAberto;
   }
 
+  toggleNavMenu() {
+    this.navMenuAberto = !this.navMenuAberto;
+  }
+
   navegarPara(rota: string) {
     this.menuAberto = false;
     this.router.navigate([rota]);
@@ -50,9 +55,10 @@ export class NavbarComponent {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    // Se o menu estiver aberto e o clique for FORA do componente navbar
-    if (this.menuAberto && !this.el.nativeElement.contains(event.target)) {
-      this.menuAberto = false;
+    // Se algum menu estiver aberto e o clique for FORA do componente navbar
+    if (!this.el.nativeElement.contains(event.target)) {
+      if (this.menuAberto) this.menuAberto = false;
+      if (this.navMenuAberto) this.navMenuAberto = false;
     }
   }
 }

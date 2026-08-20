@@ -94,4 +94,17 @@ $text-sub:    var(--text-secondary);
       &:hover { background-color: $accent-hover; }
     }
   }
+
+  @media (max-width: 480px) {
+    padding: 0 16px;
+
+    .navbar-brand .farmacia-name { display: none; }
+
+    .navbar-actions {
+      gap: 6px;
+
+      .btn-login { padding: 0.6rem 0.7rem; }
+      .btn-register { padding: 0.6rem 0.85rem; }
+    }
+  }
 }

@@ -529,3 +529,26 @@ $warning:       $danger;
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+// ── Responsivo ────────────────────────────────────────────
+@media (max-width: 640px) {
+  .page-container { padding: 24px 16px 60px; }
+
+  .page-header {
+    .page-header-right { width: 100%; }
+    .btn-add { width: 100%; justify-content: center; }
+  }
+
+  .periodo-filtro {
+    .periodo-campo { flex: 1 1 140px; }
+    .btn-add { width: auto; }
+  }
+
+  .month-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .cards-row { grid-template-columns: 1fr; }
+}

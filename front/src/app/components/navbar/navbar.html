@@ -4,7 +4,11 @@
     <span class="brand-name">Postinho</span>
   </div>
 
-  <nav class="menu">
+  <button class="hamburger-btn" (click)="toggleNavMenu()" [title]="navMenuAberto ? 'Fechar menu' : 'Abrir menu'">
+    <i class="fas" [class]="navMenuAberto ? 'fa-xmark' : 'fa-bars'"></i>
+  </button>
+
+  <nav class="menu" [class.open]="navMenuAberto" (click)="navMenuAberto = false">
     <a routerLink="/dashboard" routerLinkActive="active">Minha medicações</a>
     @if (canSeeCatalog()) {
       <a routerLink="/medicineCatalog" routerLinkActive="active">Medicações</a>
