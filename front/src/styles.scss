@@ -177,6 +177,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 4px;
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
   font-family: var(--font-body);
+  // .cdk-overlay-container (usado pelo mat-dialog) também fica em z-index:1000;
+  // sem isso o dropdown some atrás do modal dependendo da ordem de inserção no DOM.
+  z-index: 10000 !important;
 
   // O rodapé "powered by Google" (pseudo-elemento ::after) é atribuição
   // obrigatória pelos Termos de Uso do Google Maps Platform — não esconder.
