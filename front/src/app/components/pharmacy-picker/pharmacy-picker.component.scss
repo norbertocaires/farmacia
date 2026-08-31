@@ -1,0 +1,138 @@
+$bg-deep:    var(--bg-page);
+$border:     var(--border);
+$accent:     var(--accent);
+$text-main:  var(--text-primary);
+$text-muted: var(--text-secondary);
+$text-faint: var(--text-tertiary);
+$danger:     var(--danger);
+
+.pharmacy-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recent-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: $text-faint;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.recent-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.recent-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  padding: 6px 10px 6px 6px;
+  background: var(--bg-surface-2);
+  border: 1px solid $border;
+  border-radius: 999px;
+  color: $text-muted;
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  &:hover { border-color: $accent; color: $text-main; }
+
+  img { width: 16px; height: 16px; flex-shrink: 0; }
+  i { width: 16px; text-align: center; flex-shrink: 0; font-size: 0.75rem; }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  background: $bg-deep;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 0 12px;
+  transition: border-color 0.2s;
+
+  &:focus-within { border-color: $accent; }
+
+  > i {
+    color: $text-faint;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 10px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: $text-main;
+    font-size: 0.9rem;
+    font-family: inherit;
+
+    &::placeholder { color: $text-faint; }
+  }
+
+  .btn-clear {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: $text-faint;
+    cursor: pointer;
+    font-size: 0.8rem;
+
+    &:hover { color: $danger; }
+  }
+}
+
+.map-container {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid $border;
+
+  &.hidden { display: none; }
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.72rem;
+  color: $text-faint;
+
+  &.error { color: $danger; }
+}
+
+.selected-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.78rem;
+  color: $text-muted;
+
+  i { margin-top: 2px; flex-shrink: 0; }
+}

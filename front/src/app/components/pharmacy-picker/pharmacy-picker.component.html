@@ -1,0 +1,53 @@
+@if (!unavailable()) {
+  <div class="pharmacy-picker">
+    @if (recentes().length > 0 && !selected()) {
+      <div class="recent-list">
+        <span class="recent-label">Suas farmácias</span>
+        <div class="recent-chips">
+          @for (r of recentes(); track r.placeId) {
+            <button type="button" class="recent-chip" (click)="selecionarRecente(r)">
+              @if (r.iconUrl) {
+                <img [src]="r.iconUrl" alt="">
+              } @else {
+                <i class="fas fa-store"></i>
+              }
+              <span>{{ r.name }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="search-row">
+      <i class="fas fa-map-marker-alt"></i>
+      <input
+        #searchInput
+        type="text"
+        placeholder="Buscar farmácia..."
+        [class.has-value]="selected()"
+      >
+      @if (selected()) {
+        <button type="button" class="btn-clear" (click)="clear()" title="Remover">
+          <i class="fas fa-times"></i>
+        </button>
+      }
+    </div>
+
+    @if (loadError()) {
+      <p class="hint error">Não foi possível carregar o mapa agora. Tente novamente mais tarde.</p>
+    } @else {
+      <!-- O container do mapa nunca é destruído/recriado — só escondido via
+           classe — pra manter a referência do @ViewChild sempre válida. -->
+      <div class="map-container" [class.hidden]="!selected()" #mapContainer></div>
+
+      @if (selected()) {
+        <p class="selected-address">
+          <i class="fas fa-location-dot"></i>
+          {{ selected()!.address }}
+        </p>
+      } @else {
+        <p class="hint">Digite o nome da farmácia e escolha uma sugestão da lista.</p>
+      }
+    }
+  </div>
+}

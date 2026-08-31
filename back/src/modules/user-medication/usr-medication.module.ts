@@ -8,12 +8,14 @@ import { User } from '../users/entities/user.entity';
 import { UsersModule } from '../users/users.module';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { LogsModule } from '../log/logs.module';
+import { PharmacyModule } from '../pharmacy/pharmacy.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserMedication, Medicine, User]),
     forwardRef(() => UsersModule),
     LogsModule,
+    PharmacyModule,
   ],
   controllers: [UserMedicationController],
   providers: [UserMedicationService, RolesGuard],

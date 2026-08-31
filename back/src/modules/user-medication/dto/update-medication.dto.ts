@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, Min, IsDateString } from 'class-validator';
+import { IsNumber, IsOptional, Min, Max, IsDateString, IsString, MaxLength } from 'class-validator';
 
 export class UpdateMedicationDto {
   @IsOptional()
@@ -29,4 +29,41 @@ export class UpdateMedicationDto {
   @IsOptional()
   @IsDateString()
   purchaseDate?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  pharmacyName?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  pharmacyAddress?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  pharmacyPlaceId?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(-90)
+  @Max(90)
+  pharmacyLat?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(-180)
+  @Max(180)
+  pharmacyLng?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  pharmacyIconUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  pharmacyIconBackgroundColor?: string;
 }

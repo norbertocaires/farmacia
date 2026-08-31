@@ -3,12 +3,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserMedication } from './entities/user-medication.entity';
 import { Medicine } from '../medicines/entities/medicine.entity';
+import { Pharmacy } from '../pharmacy/entities/pharmacy.entity';
 import { LinkMedicationDto } from './dto/link-medication.dto';
 import { UpdateMedicationDto } from './dto/update-medication.dto';
 import { UsersService } from '../users/users.service';
 import { LogsService } from '../log/logs.service';
 import { LogAction } from '../log/enums/log-action.enum';
 import { RequestInfo } from '../../common/utils/request-info.util';
+import { PharmacyService } from '../pharmacy/pharmacy.service';
+
+// Campos de farmácia que chegam juntos (do seletor do Google Places no
+// front) tanto no vincular quanto no editar — extraído pra um tipo próprio
+// só pra não repetir a assinatura em dois lugares.
+interface DadosFarmaciaDto {
+  pharmacyPlaceId?: string;
+  pharmacyName?: string;
+  pharmacyAddress?: string;
+  pharmacyLat?: number;
+  pharmacyLng?: number;
+  pharmacyIconUrl?: string;
+  pharmacyIconBackgroundColor?: string;
+}
 
 @Injectable()
 export class UserMedicationService {
@@ -19,7 +34,31 @@ export class UserMedicationService {
     private medicineRepo: Repository<Medicine>,
     private usersService: UsersService,
     private logsService: LogsService,
+    private pharmacyService: PharmacyService,
   ) { }
+
+  // Resolve o place escolhido no front pra uma Pharmacy cadastrada — cria na
+  // primeira vez que aquele placeId aparece, reaproveita nas próximas (ver
+  // PharmacyService.findOrCreateByPlaceId). Sem placeId, não tem farmácia.
+  private async resolvePharmacy(dto: DadosFarmaciaDto): Promise<Pharmacy | null> {
+    if (!dto.pharmacyPlaceId) {
+      return null;
+    }
+
+    if (!dto.pharmacyName || dto.pharmacyLat === undefined || dto.pharmacyLng === undefined) {
+      throw new BadRequestException('Dados da farmácia incompletos.');
+    }
+
+    return this.pharmacyService.findOrCreateByPlaceId({
+      placeId: dto.pharmacyPlaceId,
+      name: dto.pharmacyName,
+      address: dto.pharmacyAddress,
+      lat: dto.pharmacyLat,
+      lng: dto.pharmacyLng,
+      iconUrl: dto.pharmacyIconUrl,
+      iconBackgroundColor: dto.pharmacyIconBackgroundColor,
+    });
+  }
 
   async vincularRemedio(email: string, dto: LinkMedicationDto, requestInfo?: RequestInfo) {
     const user = await this.usersService.findByEmail(email);
@@ -33,6 +72,8 @@ export class UserMedicationService {
       throw new NotFoundException('Medicamento não encontrado no catálogo.');
     }
 
+    const pharmacy = await this.resolvePharmacy(dto);
+
     // Agora sim: todas as variáveis existem no 'dto'
     const link = this.userMedRepo.create({
       user: { id: user.id },
@@ -43,6 +84,7 @@ export class UserMedicationService {
       frequencyPerDay: dto.frequencyPerDay,
       boxQuantity: dto.boxQuantity,
       purchaseDate: dto.purchaseDate ? new Date(dto.purchaseDate) : null,
+      pharmacy,
     });
 
     const savedLink = await this.userMedRepo.save(link);
@@ -85,6 +127,7 @@ export class UserMedicationService {
     const query = this.userMedRepo.createQueryBuilder('vinculo')
       .leftJoinAndSelect('vinculo.medication', 'medication')
       .leftJoinAndSelect('vinculo.user', 'user')
+      .leftJoinAndSelect('vinculo.pharmacy', 'pharmacy')
       .where('user.email = :email', { email: filtros.email });
 
     if (filtros.busca) {
@@ -141,6 +184,15 @@ export class UserMedicationService {
       boxQuantity: item.boxQuantity,
       ...this.calcularResumoFinanceiro(item),
       dataCompra: item.purchaseDate ?? null,
+      farmacia: item.pharmacy ? {
+        nome: item.pharmacy.name,
+        endereco: item.pharmacy.address,
+        placeId: item.pharmacy.placeId,
+        lat: Number(item.pharmacy.lat),
+        lng: Number(item.pharmacy.lng),
+        iconUrl: item.pharmacy.iconUrl,
+        iconBackgroundColor: item.pharmacy.iconBackgroundColor,
+      } : null,
       criadoEm: item.createdAt,
       atualizadoEm: item.updatedAt,
     };
@@ -149,7 +201,7 @@ export class UserMedicationService {
   async findOneByEmail(id: number, email: string) {
     const vinculo = await this.userMedRepo.findOne({
       where: { id, user: { email } },
-      relations: ['medication', 'user'],
+      relations: ['medication', 'user', 'pharmacy'],
     });
 
     if (!vinculo) {
@@ -180,11 +232,27 @@ export class UserMedicationService {
       throw new NotFoundException('Medicamento não encontrado no seu postinho');
     }
 
-    const { purchaseDate, ...rest } = dto;
+    const {
+      purchaseDate,
+      pharmacyPlaceId, pharmacyName, pharmacyAddress, pharmacyLat, pharmacyLng,
+      pharmacyIconUrl, pharmacyIconBackgroundColor,
+      ...rest
+    } = dto;
     Object.assign(vinculo, rest);
+
     if (purchaseDate !== undefined) {
       vinculo.purchaseDate = purchaseDate ? new Date(purchaseDate) : null;
     }
+
+    // pharmacyPlaceId ausente do payload = não mexe na farmácia já vinculada.
+    // Presente e vazio/null = remove a farmácia. Presente com valor = troca
+    // (reaproveitando a Pharmacy cadastrada, ou criando uma nova).
+    if (pharmacyPlaceId !== undefined) {
+      vinculo.pharmacy = pharmacyPlaceId
+        ? await this.resolvePharmacy({ pharmacyPlaceId, pharmacyName, pharmacyAddress, pharmacyLat, pharmacyLng, pharmacyIconUrl, pharmacyIconBackgroundColor })
+        : null;
+    }
+
     const updated = await this.userMedRepo.save(vinculo);
 
     await this.logsService.record(LogAction.MEDICATION_UPDATED, {

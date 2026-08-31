@@ -37,7 +37,7 @@ Monorepo com front-end (Angular) + back-end (NestJS):
 |---|---|
 | Autenticação | Login por e-mail/senha ou Google, cadastro, guarda de rotas por sessão e por papel |
 | Minha Farmácia | Medicações vinculadas ao usuário, agrupadas por mês/dia, com filtro por período e cálculo de gasto diário/mensal e economia vs. PMC |
-| Vincular/editar medicamento | Busca por código EAN (com leitura de código de barras via câmera) que preenche os dados do catálogo automaticamente |
+| Vincular/editar medicamento | Busca por código EAN (com leitura de código de barras via câmera) que preenche os dados do catálogo automaticamente; farmácia de compra opcional, buscada via Google Places (requer `GOOGLE_MAPS_API_KEY`) |
 | Catálogo de Medicamentos | Consulta paginada e filtrada ao catálogo geral (importado da ANVISA) |
 | Importar Medicamentos | Upload de planilha `.xlsx`, com barra de progresso em tempo real via WebSocket |
 | Administração de Usuários | Busca, ativação/desativação e alteração de papel (role) dos usuários |
@@ -136,6 +136,8 @@ ng serve
 Acesse `http://localhost:4200/`. A aplicação recarrega automaticamente ao alterar os arquivos-fonte.
 
 As URLs de API/WebSocket ficam em `src/environments/` (`environment.ts`, `environment.development.ts`, `environment.prod.ts`). O `googleClientId` vem vazio em `environment.ts`/`environment.development.ts` — preencha localmente com o Client ID do seu OAuth do Google antes de rodar (não commitar o valor real). Em `environment.docker.ts` e `environment.prod.ts` o campo é o placeholder `__GOOGLE_CLIENT_ID__`, substituído em build-time a partir da variável de ambiente `GOOGLE_CLIENT_ID` (ver [Dockerfile](front/Dockerfile) e [vercel.json](front/vercel.json)).
+
+O `googleMapsApiKey` segue exatamente o mesmo mecanismo, a partir da variável `GOOGLE_MAPS_API_KEY` — precisa de uma API key do [Google Maps Platform](https://console.cloud.google.com/google/maps-apis) com a **Places API** habilitada e faturamento ativo no projeto (é uma chave separada do `GOOGLE_CLIENT_ID` do login). Habilita o seletor de farmácia (busca + mapa) no modal de vincular medicamento — sem a chave configurada, esse campo simplesmente não aparece no formulário, o resto do app funciona normalmente.
 
 Build de produção:
 

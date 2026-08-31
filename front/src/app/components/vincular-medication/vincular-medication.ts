@@ -6,13 +6,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
 import { FarmaciaService } from '../../pages/user-medication/services/user-medication.service';
 import type { IScannerControls } from '@zxing/browser';
+import { GoogleMapsLoaderService } from '../../common/google-maps/google-maps-loader.service';
+import { PharmacyPickerComponent } from '../pharmacy-picker/pharmacy-picker.component';
+import { PharmacySelection } from '../pharmacy-picker/pharmacy-selection';
 
 @Component({
   selector: 'app-vincular-medication-modal',
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule, MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule, PharmacyPickerComponent
   ],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './vincular-medication.html',
@@ -33,9 +36,22 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private farmaciaService: FarmaciaService,
     private cdr: ChangeDetectorRef,
+    private mapsLoader: GoogleMapsLoaderService,
     public dialogRef: MatDialogRef<VincularMedicationModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
+
+  get mapsAvailable(): boolean {
+    return this.mapsLoader.isConfigured;
+  }
+
+  get pharmacyValue(): PharmacySelection | null {
+    const f = this.data?.farmacia;
+    return f?.nome ? {
+      name: f.nome, address: f.endereco ?? '', placeId: f.placeId ?? '', lat: f.lat ?? 0, lng: f.lng ?? 0,
+      iconUrl: f.iconUrl ?? null, iconBackgroundColor: f.iconBackgroundColor ?? null,
+    } : null;
+  }
 
   todayIso(): string {
     return new Date().toISOString().split('T')[0];
@@ -65,7 +81,15 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
       frequencyPerDay: [this.data?.frequencyPerDay ?? 1,    [Validators.required, Validators.min(1)]],
       dataCompra:      [this.data?.dataCompra ? this.data.dataCompra.split('T')[0] : this.todayIso(), [
         (control: import('@angular/forms').AbstractControl) => control.value && control.value > this.todayIso() ? { futureDate: true } : null
-      ]]
+      ]],
+      // Farmácia onde comprou — opcional, preenchida pelo seletor do Google Places
+      pharmacyName:    [this.pharmacyValue?.name    ?? null],
+      pharmacyAddress: [this.pharmacyValue?.address ?? null],
+      pharmacyPlaceId: [this.pharmacyValue?.placeId ?? null],
+      pharmacyLat:     [this.pharmacyValue?.lat     ?? null],
+      pharmacyLng:     [this.pharmacyValue?.lng     ?? null],
+      pharmacyIconUrl:             [this.pharmacyValue?.iconUrl             ?? null],
+      pharmacyIconBackgroundColor: [this.pharmacyValue?.iconBackgroundColor ?? null],
     });
 
     this.form.get('ean')?.valueChanges.pipe(
@@ -104,6 +128,18 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
     if (this.isEditMode && this.data?.medicamento) {
       this.aplicarResultadoBusca(this.data.medicamento);
     }
+  }
+
+  onPharmacySelected(selection: PharmacySelection | null): void {
+    this.form.patchValue({
+      pharmacyName:    selection?.name    ?? null,
+      pharmacyAddress: selection?.address ?? null,
+      pharmacyPlaceId: selection?.placeId ?? null,
+      pharmacyLat:     selection?.lat     ?? null,
+      pharmacyLng:     selection?.lng     ?? null,
+      pharmacyIconUrl:             selection?.iconUrl             ?? null,
+      pharmacyIconBackgroundColor: selection?.iconBackgroundColor ?? null,
+    });
   }
 
   private aplicarResultadoBusca(r: any): void {

@@ -88,6 +88,47 @@ describe('VincularMedicationModalComponent', () => {
       expect(payload.medicationId).toBe('med-1');
       expect(dialogRef.close).toHaveBeenCalledWith(true);
     });
+
+    it('should not show the pharmacy picker when no Google Maps API key is configured', () => {
+      // Sem GOOGLE_MAPS_API_KEY no ambiente de teste (environment.ts fica vazio de propósito)
+      expect(component.mapsAvailable).toBe(false);
+      expect(fixture.nativeElement.querySelector('app-pharmacy-picker')).toBeNull();
+    });
+
+    it('should patch the pharmacy fields when a place is selected, and include them on save', async () => {
+      component.form.get('ean')?.setValue('7891234567890');
+      vi.advanceTimersByTime(500);
+      await Promise.resolve();
+      component.form.patchValue({ pricePaid: 10, totalQuantity: 30 });
+
+      component.onPharmacySelected({
+        name: 'Farmácia São Paulo',
+        address: 'Av. Paulista, 1000 - São Paulo, SP',
+        placeId: 'ChIJ_abc123',
+        lat: -23.561684,
+        lng: -46.655981,
+      });
+
+      expect(component.form.get('pharmacyName')?.value).toBe('Farmácia São Paulo');
+      expect(component.form.get('pharmacyPlaceId')?.value).toBe('ChIJ_abc123');
+
+      component.salvar();
+
+      const payload = farmaciaService.vincularRemedio.mock.calls[0][0];
+      expect(payload.pharmacyName).toBe('Farmácia São Paulo');
+      expect(payload.pharmacyAddress).toBe('Av. Paulista, 1000 - São Paulo, SP');
+      expect(payload.pharmacyPlaceId).toBe('ChIJ_abc123');
+      expect(payload.pharmacyLat).toBe(-23.561684);
+      expect(payload.pharmacyLng).toBe(-46.655981);
+    });
+
+    it('should clear the pharmacy fields when the selection is removed', async () => {
+      component.onPharmacySelected({ name: 'X', address: 'Y', placeId: 'z', lat: 1, lng: 2 });
+      component.onPharmacySelected(null);
+
+      expect(component.form.get('pharmacyName')?.value).toBeNull();
+      expect(component.form.get('pharmacyLat')?.value).toBeNull();
+    });
   });
 
   describe('edit mode', () => {

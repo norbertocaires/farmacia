@@ -184,6 +184,17 @@
           </div>
 
         </div>
+
+        @if (mapsAvailable) {
+          <div class="section-divider">
+            <span>Farmácia onde comprou (opcional)</span>
+          </div>
+
+          <app-pharmacy-picker
+            [value]="pharmacyValue"
+            (valueChange)="onPharmacySelected($event)"
+          />
+        }
       }
 
     </form>

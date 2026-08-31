@@ -11,12 +11,14 @@ import { MedicinesModule } from './modules/medicines/medicines/medicines.module'
 import { MedicinesImportModule } from './modules/medicines/medicines-import/medicines-import.module';
 import { MedicationModule } from './modules/user-medication/usr-medication.module';
 import { LogsModule } from './modules/log/logs.module';
+import { PharmacyModule } from './modules/pharmacy/pharmacy.module';
 
 import { User } from './modules/users/entities/user.entity';
 import { Medicine } from './modules/medicines/entities/medicine.entity';
 import { PasswordHistory } from './modules/users/entities/password-history.entity';
 import { UserMedication } from './modules/user-medication/entities/user-medication.entity';
 import { ActivityLog } from './modules/log/entities/activity-log.entity';
+import { Pharmacy } from './modules/pharmacy/entities/pharmacy.entity';
 
 @Module({
   imports: [
@@ -41,7 +43,7 @@ import { ActivityLog } from './modules/log/entities/activity-log.entity';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
-        entities: [User, Medicine, PasswordHistory, UserMedication, ActivityLog],
+        entities: [User, Medicine, PasswordHistory, UserMedication, ActivityLog, Pharmacy],
         synchronize: true,
         
         // Configuração vital para bancos na nuvem (Render/Supabase)
@@ -56,6 +58,7 @@ import { ActivityLog } from './modules/log/entities/activity-log.entity';
     MedicinesImportModule,
     MedicationModule,
     LogsModule,
+    PharmacyModule,
   ],
   providers: [
     DatabaseSeeder,

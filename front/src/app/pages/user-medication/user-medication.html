@@ -145,6 +145,13 @@
                   </div>
                 }
 
+                @if (item.farmacia; as farmacia) {
+                  <div class="pharmacy-row" [title]="farmacia.endereco ?? ''">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ farmacia.nome }}</span>
+                  </div>
+                }
+
                 <div class="med-card-footer">
                   <div class="pmc-badge" [class.economia]="item.economizou" [class.caro]="!item.economizou">
                     @if (item.economizou) {

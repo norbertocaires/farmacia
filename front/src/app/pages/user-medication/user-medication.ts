@@ -164,6 +164,7 @@ export class ListagemComponent implements OnInit {
             dosage:         detalhes.dosage         ?? 1,
             frequencyPerDay: detalhes.frequencyPerDay ?? 1,
             dataCompra:     detalhes.dataCompra     ?? null,
+            farmacia:       detalhes.farmacia        ?? null,
             medicamento:    detalhes.medicamento
           }
         });

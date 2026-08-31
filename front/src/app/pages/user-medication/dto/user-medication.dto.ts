@@ -11,6 +11,16 @@ export interface MedicamentoDto {
   precoFabrica?: number;
 }
 
+export interface FarmaciaDto {
+  nome: string;
+  endereco: string | null;
+  placeId: string | null;
+  lat: number | null;
+  lng: number | null;
+  iconUrl?: string | null;
+  iconBackgroundColor?: string | null;
+}
+
 export interface UserMedicationDto {
   id: number;
   nome: string;
@@ -31,4 +41,5 @@ export interface UserMedicationDto {
   frequencyPerDay?: number;
   pmc: number;
   medicamento?: MedicamentoDto;
+  farmacia?: FarmaciaDto | null;
 }

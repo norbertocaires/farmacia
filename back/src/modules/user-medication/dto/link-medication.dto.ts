@@ -1,4 +1,4 @@
-import { IsNumber, IsNotEmpty, IsUUID, Min, IsDateString, IsOptional } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsUUID, Min, Max, IsDateString, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class LinkMedicationDto {
   @IsUUID()
@@ -28,4 +28,43 @@ export class LinkMedicationDto {
   @IsOptional()
   @IsDateString()
   purchaseDate?: string; // Data da compra (ex: "2026-04-10")
+
+  // Farmácia onde a compra foi feita — opcional, vem do seletor do Google
+  // Places no front. Os 5 campos chegam juntos (ou nenhum deles).
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  pharmacyName?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  pharmacyAddress?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  pharmacyPlaceId?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(-90)
+  @Max(90)
+  pharmacyLat?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(-180)
+  @Max(180)
+  pharmacyLng?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  pharmacyIconUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  pharmacyIconBackgroundColor?: string;
 }
