@@ -124,6 +124,12 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
       zoom,
       disableDefaultUI: true,
       zoomControl: true,
+      // Sem isso o Maps assume "auto", que vira "cooperative" por o mapa
+      // estar embutido numa página rolável — aí scroll/drag exigem Ctrl e
+      // mostram o aviso "Use Ctrl + scroll". Aqui o mapa É o controle
+      // principal do formulário, não um mapa decorativo, então "greedy"
+      // deixa arrastar/zoom direto com o mouse.
+      gestureHandling: 'greedy',
       // AdvancedMarkerElement exige um mapId (não precisa ser um Map ID real
       // configurado no Cloud Console pra funcionar sem estilização na nuvem)
       // — "DEMO_MAP_ID" é o placeholder documentado pelo Google pra esse
