@@ -10,12 +10,15 @@ import { ImportMedicinesComponent } from './pages/medicines-import/medicines-imp
 import { MedicineCatalogComponent } from './pages/medicine-catalog/medicine-catalog.component'
 import { UserAdminComponent } from './pages/user-admin/user-admin.component';
 import { LogsComponent } from './pages/logs/logs.component';
+import { VincularMedicationPageComponent } from './pages/vincular-medication/vincular-medication';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: ListagemComponent, canActivate: [authGuard] },
+  { path: 'vincular-medicamento', component: VincularMedicationPageComponent, canActivate: [authGuard] },
+  { path: 'vincular-medicamento/:id', component: VincularMedicationPageComponent, canActivate: [authGuard] },
   { path: 'profile', component: Profile, canActivate: [authGuard] },
   { path: 'medicineCatalog', component: MedicineCatalogComponent, canActivate: [authGuard, roleGuard(auth => auth.canSeeCatalog())] },
   { path: 'importMedicinesComponent', component: ImportMedicinesComponent, canActivate: [authGuard, roleGuard(auth => auth.canSeeImport())] },

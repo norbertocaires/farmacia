@@ -1,19 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { of, throwError } from 'rxjs';
 
-import { VincularMedicationModalComponent } from './vincular-medication';
-import { FarmaciaService } from '../../pages/user-medication/services/user-medication.service';
+import { VincularMedicationPageComponent } from './vincular-medication';
+import { FarmaciaService } from '../user-medication/services/user-medication.service';
 
-describe('VincularMedicationModalComponent', () => {
-  let fixture: ComponentFixture<VincularMedicationModalComponent>;
-  let component: VincularMedicationModalComponent;
+describe('VincularMedicationPageComponent', () => {
+  let fixture: ComponentFixture<VincularMedicationPageComponent>;
+  let component: VincularMedicationPageComponent;
   let farmaciaService: {
     buscarPorNome: ReturnType<typeof vi.fn>;
     vincularRemedio: ReturnType<typeof vi.fn>;
     atualizarVinculo: ReturnType<typeof vi.fn>;
+    getById: ReturnType<typeof vi.fn>;
   };
-  let dialogRef: { close: ReturnType<typeof vi.fn> };
+  let router: { navigate: ReturnType<typeof vi.fn> };
+  let toast: { error: ReturnType<typeof vi.fn> };
 
   const searchResult = {
     id: 'med-1',
@@ -27,20 +30,26 @@ describe('VincularMedicationModalComponent', () => {
     precoFabrica: 8.2,
   };
 
-  function setup(data: any) {
+  function setup(paramId: string | null) {
     farmaciaService = {
       buscarPorNome: vi.fn(() => of([searchResult])),
       vincularRemedio: vi.fn(() => of({ ok: true })),
       atualizarVinculo: vi.fn(() => of({ ok: true })),
+      getById: vi.fn(),
     };
-    dialogRef = { close: vi.fn() };
+    router = { navigate: vi.fn() };
+    toast = { error: vi.fn() };
 
     return TestBed.configureTestingModule({
-      imports: [VincularMedicationModalComponent],
+      imports: [VincularMedicationPageComponent],
       providers: [
         { provide: FarmaciaService, useValue: farmaciaService },
-        { provide: MatDialogRef, useValue: dialogRef },
-        { provide: MAT_DIALOG_DATA, useValue: data },
+        { provide: Router, useValue: router },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap(paramId ? { id: paramId } : {}) } },
+        },
+        { provide: ToastrService, useValue: toast },
       ],
     }).compileComponents();
   }
@@ -52,8 +61,8 @@ describe('VincularMedicationModalComponent', () => {
   describe('add mode', () => {
     beforeEach(async () => {
       vi.useFakeTimers();
-      await setup({});
-      fixture = TestBed.createComponent(VincularMedicationModalComponent);
+      await setup(null);
+      fixture = TestBed.createComponent(VincularMedicationPageComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
     });
@@ -75,7 +84,7 @@ describe('VincularMedicationModalComponent', () => {
       expect(component.form.get('laboratorio')?.value).toBe('Medley');
     });
 
-    it('should call vincularRemedio with the medicationId on save', async () => {
+    it('should call vincularRemedio with the medicationId on save and navigate back', async () => {
       component.form.get('ean')?.setValue('7891234567890');
       vi.advanceTimersByTime(500);
       await Promise.resolve();
@@ -86,7 +95,7 @@ describe('VincularMedicationModalComponent', () => {
       expect(farmaciaService.vincularRemedio).toHaveBeenCalled();
       const payload = farmaciaService.vincularRemedio.mock.calls[0][0];
       expect(payload.medicationId).toBe('med-1');
-      expect(dialogRef.close).toHaveBeenCalledWith(true);
+      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
     });
 
     it('should not show the pharmacy picker when no Google Maps API key is configured', () => {
@@ -129,28 +138,38 @@ describe('VincularMedicationModalComponent', () => {
       expect(component.form.get('pharmacyName')?.value).toBeNull();
       expect(component.form.get('pharmacyLat')?.value).toBeNull();
     });
+
+    it('should navigate back to the dashboard when cancelling', () => {
+      component.cancelar();
+      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+    });
   });
 
   describe('edit mode', () => {
+    const detalhes = {
+      id: 42,
+      ean: '7891234567890',
+      medicamento: searchResult,
+      pricePaid: 9.9,
+      boxQuantity: 1,
+      totalQuantity: 30,
+      dosage: 1,
+      frequencyPerDay: 2,
+      dataCompra: null,
+      farmacia: null,
+    };
+
     beforeEach(async () => {
-      await setup({
-        editMode: true,
-        id: 42,
-        ean: '7891234567890',
-        medicamento: searchResult,
-        pricePaid: 9.9,
-        boxQuantity: 1,
-        totalQuantity: 30,
-        dosage: 1,
-        frequencyPerDay: 2,
-        dataCompra: null,
-      });
-      fixture = TestBed.createComponent(VincularMedicationModalComponent);
+      await setup('42');
+      fixture = TestBed.createComponent(VincularMedicationPageComponent);
       component = fixture.componentInstance;
-      fixture.detectChanges();
     });
 
-    it('should disable the ean field and prefill data from "medicamento"', () => {
+    it('should show a loading state while fetching the details, then disable the ean field and prefill data', () => {
+      farmaciaService.getById.mockReturnValue(of(detalhes));
+      fixture.detectChanges();
+
+      expect(farmaciaService.getById).toHaveBeenCalledWith('42');
       expect(component.isEditMode).toBe(true);
       expect(component.form.get('ean')?.disabled).toBe(true);
       expect(component.form.get('nomeVisual')?.value).toBe('Dipirona 500mg');
@@ -159,17 +178,31 @@ describe('VincularMedicationModalComponent', () => {
     });
 
     it('should show both the factory price and the PMC (Preço Máximo Consumidor)', () => {
+      farmaciaService.getById.mockReturnValue(of(detalhes));
+      fixture.detectChanges();
+
       const text = fixture.nativeElement.textContent as string;
       expect(text).toContain('Preço Máximo Fábrica');
       expect(text).toContain('Preço Máximo Consumidor');
     });
 
-    it('should call atualizarVinculo with the linked id on save', () => {
+    it('should call atualizarVinculo with the linked id on save and navigate back', () => {
+      farmaciaService.getById.mockReturnValue(of(detalhes));
+      fixture.detectChanges();
+
       component.salvar();
 
       expect(farmaciaService.atualizarVinculo).toHaveBeenCalled();
-      expect(farmaciaService.atualizarVinculo.mock.calls[0][0]).toBe(42);
-      expect(dialogRef.close).toHaveBeenCalledWith(true);
+      expect(farmaciaService.atualizarVinculo.mock.calls[0][0]).toBe('42');
+      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+    });
+
+    it('should show an error toast and navigate back when loading the details fails', () => {
+      farmaciaService.getById.mockReturnValue(throwError(() => new Error('falhou')));
+      fixture.detectChanges();
+
+      expect(toast.error).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
     });
   });
 });

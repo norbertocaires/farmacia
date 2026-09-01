@@ -166,43 +166,6 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(0, 0, 0, 0.75);
 }
 
-/* ── Google Places Autocomplete ───────────────────────── */
-/* O dropdown de sugestões é injetado pelo Google direto no <body>, fora do
-   encapsulamento do Angular — sem isso ele vem com o tema claro padrão do
-   Google, destoando dos 3 temas do app. */
-.pac-container {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-top: 4px;
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
-  font-family: var(--font-body);
-  // .cdk-overlay-container (usado pelo mat-dialog) também fica em z-index:1000;
-  // sem isso o dropdown some atrás do modal dependendo da ordem de inserção no DOM.
-  z-index: 10000 !important;
-
-  // O rodapé "powered by Google" (pseudo-elemento ::after) é atribuição
-  // obrigatória pelos Termos de Uso do Google Maps Platform — não esconder.
-
-  .pac-item {
-    padding: 8px 12px;
-    border-top: 1px solid var(--border-soft);
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-
-    &:first-child { border-top: none; }
-    &:hover, &.pac-item-selected { background: var(--bg-surface-2); }
-  }
-
-  .pac-item-query {
-    color: var(--text-primary);
-    font-size: 0.85rem;
-  }
-
-  .pac-icon { display: none; }
-  .pac-matched { color: var(--accent); }
-}
-
 /* ── Pino do mapa (Google Places) ─────────────────────── */
 /* Conteúdo de um AdvancedMarkerElement — DOM criado via document.createElement
    e entregue pro Maps, também fora do encapsulamento do componente Angular

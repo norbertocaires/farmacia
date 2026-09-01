@@ -7,11 +7,22 @@ import { GoogleMapsLoaderService } from '../../common/google-maps/google-maps-lo
 import { PharmacyService } from '../../common/pharmacy/pharmacy.service';
 import { PharmacySelection } from './pharmacy-selection';
 
+// São Paulo como centro padrão quando a geolocalização não está disponível
+// ou é negada — só um ponto de partida razoável pra começar a navegar.
+const DEFAULT_CENTER: google.maps.LatLngLiteral = { lat: -23.5505, lng: -46.6333 };
+const DEFAULT_ZOOM = 15;
+const LOCATED_ZOOM = 17;
+
 /**
- * Campo de busca (Google Places Autocomplete) + mapinha com o ÍCONE REAL do
- * Google pra aquele estabelecimento (não um pino genérico). Mostra também as
- * farmácias que o usuário já usou antes, pra reaproveitar sem buscar de novo
- * — a mesma farmácia (mesmo placeId) nunca é recadastrada no backend.
+ * Mapa interativo (sem campo de busca por texto) pra escolher a farmácia:
+ * o usuário navega no próprio mapa (arrasta/zoom, como no Google Maps) e
+ * clica em cima do ícone do estabelecimento — o clique num POI do mapa
+ * dispara um evento com o placeId, que é resolvido via PlacesService pra
+ * preencher nome/endereço/ícone reais daquele lugar (não um pino genérico).
+ *
+ * Mostra também as farmácias que o usuário já usou antes, pra reaproveitar
+ * sem precisar navegar de novo — a mesma farmácia (mesmo placeId) nunca é
+ * recadastrada no backend.
  *
  * Se a API key do Maps não estiver configurada, some silenciosamente — o
  * campo é sempre opcional, nunca bloqueia o formulário.
@@ -27,19 +38,18 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
   @Input() value: PharmacySelection | null = null;
   @Output() valueChange = new EventEmitter<PharmacySelection | null>();
 
-  @ViewChild('searchInput') searchInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild('mapContainer') mapContainerRef!: ElementRef<HTMLDivElement>;
 
   readonly unavailable = signal(false);
   readonly loadError = signal(false);
   readonly selected = signal<PharmacySelection | null>(null);
   readonly recentes = signal<PharmacySelection[]>([]);
+  readonly locating = signal(false);
 
-  private autocomplete: google.maps.places.Autocomplete | null = null;
   private map: google.maps.Map | null = null;
   private marker: google.maps.marker.AdvancedMarkerElement | null = null;
-  private scrollRepositionPending = false;
-  private readonly onAncestorScroll = () => this.notifyLayoutShift();
+  private placesService: google.maps.places.PlacesService | null = null;
+  private mapClickListener: google.maps.MapsEventListener | null = null;
 
   constructor(
     private mapsLoader: GoogleMapsLoaderService,
@@ -50,44 +60,12 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
     // Farmácias recentes não dependem do Maps carregado — é só uma consulta
     // ao nosso próprio backend, então mostra o quanto antes.
     this.pharmacyService.getMine().subscribe({
-      next: (lista) => { this.recentes.set(lista); this.notifyLayoutShift(); },
+      next: (lista) => this.recentes.set(lista),
       error: () => this.recentes.set([]),
     });
   }
 
-  /**
-   * O widget legado google.maps.places.Autocomplete calcula a posição do seu
-   * dropdown (`.pac-container`, injetado fora do Angular, direto no <body>)
-   * a partir da posição do campo na tela, e só recalcula em eventos de
-   * scroll/resize da JANELA — nunca em reflows arbitrários da página nem em
-   * scroll de um container interno (ex.: o corpo do modal, que tem rolagem
-   * própria). Duas situações comuns aqui deixam essa posição desatualizada:
-   *
-   *  1. A lista "Suas farmácias" chega de forma assíncrona e, ao renderizar,
-   *     empurra o campo pra baixo — se o usuário já tiver começado a digitar
-   *     antes dela chegar (rede real tem mais latência que localhost), o
-   *     dropdown abre grudado na posição antiga.
-   *  2. O modal tem rolagem interna; ao rolar até o campo de farmácia, esse
-   *     scroll não é do `window`, então o Google nunca fica sabendo.
-   *
-   * Em ambos os casos, disparar um evento de `resize` sintético força o
-   * widget a reler a posição atual do campo e reposicionar o dropdown.
-   */
-  private notifyLayoutShift(): void {
-    if (this.scrollRepositionPending) return;
-    this.scrollRepositionPending = true;
-    requestAnimationFrame(() => {
-      this.scrollRepositionPending = false;
-      window.dispatchEvent(new Event('resize'));
-    });
-  }
-
   ngAfterViewInit(): void {
-    // Eventos de scroll não voltam a subir (bubble), mas a fase de captura
-    // passa por todo ancestral mesmo assim — isso pega o scroll do corpo do
-    // modal (ou qualquer outro container rolável) sem precisar saber qual é.
-    document.addEventListener('scroll', this.onAncestorScroll, { capture: true, passive: true });
-
     if (!this.mapsLoader.isConfigured) {
       this.unavailable.set(true);
       return;
@@ -96,22 +74,18 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
     this.selected.set(this.value);
 
     this.mapsLoader.load()
-      .then(() => this.setupAutocomplete())
+      .then(() => this.initMap())
       .catch(() => this.loadError.set(true));
   }
 
   ngOnDestroy(): void {
-    document.removeEventListener('scroll', this.onAncestorScroll, { capture: true });
-    if (this.autocomplete) {
-      google.maps.event.clearInstanceListeners(this.autocomplete);
+    if (this.mapClickListener) {
+      google.maps.event.removeListener(this.mapClickListener);
     }
   }
 
   clear(): void {
     this.selected.set(null);
-    if (this.searchInputRef) {
-      this.searchInputRef.nativeElement.value = '';
-    }
     if (this.marker) {
       this.marker.map = null;
     }
@@ -121,87 +95,117 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
 
   selecionarRecente(place: PharmacySelection): void {
     this.selected.set(place);
-    if (this.searchInputRef) {
-      this.searchInputRef.nativeElement.value = place.name;
-    }
-    this.applySelection(place);
+    this.applySelection(place, true);
   }
 
-  private setupAutocomplete(): void {
-    const input = this.searchInputRef.nativeElement;
+  /** Centraliza o mapa na localização atual do navegador, se autorizado. */
+  usarMinhaLocalizacao(): void {
+    if (!this.map || !navigator.geolocation) return;
+    this.locating.set(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.map!.panTo({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        this.map!.setZoom(LOCATED_ZOOM);
+        this.locating.set(false);
+      },
+      () => this.locating.set(false),
+      { timeout: 5000 }
+    );
+  }
 
-    this.autocomplete = new google.maps.places.Autocomplete(input, {
-      types: ['establishment'],
-      componentRestrictions: { country: 'br' },
-      fields: ['place_id', 'name', 'formatted_address', 'geometry', 'icon', 'icon_background_color'],
+  private async initMap(): Promise<void> {
+    const jaSelecionado = this.value;
+    const { center, zoom } = jaSelecionado
+      ? { center: { lat: jaSelecionado.lat, lng: jaSelecionado.lng }, zoom: LOCATED_ZOOM }
+      : await this.localizacaoInicial();
+
+    this.map = new google.maps.Map(this.mapContainerRef.nativeElement, {
+      center,
+      zoom,
+      disableDefaultUI: true,
+      zoomControl: true,
+      // AdvancedMarkerElement exige um mapId (não precisa ser um Map ID real
+      // configurado no Cloud Console pra funcionar sem estilização na nuvem)
+      // — "DEMO_MAP_ID" é o placeholder documentado pelo Google pra esse
+      // exato caso. Também é o mapId que faz os ícones de estabelecimento
+      // (POI) aparecerem clicáveis no mapa base.
+      mapId: 'DEMO_MAP_ID',
     });
 
-    this.autocomplete.addListener('place_changed', () => {
-      const place = this.autocomplete!.getPlace();
-      const location = place.geometry?.location;
+    // Clicar num ícone de estabelecimento do próprio mapa base é como o
+    // usuário escolhe a farmácia — sem digitar nada. O Google dispara esse
+    // mesmo evento "click" pra cliques em qualquer ponto do mapa, mas só
+    // inclui `placeId` quando o clique caiu em cima de um POI.
+    this.mapClickListener = this.map.addListener('click', (event: google.maps.MapMouseEvent) => {
+      const placeId = (event as google.maps.IconMouseEvent).placeId;
+      if (!placeId) return;
+      event.stop(); // evita a infowindow padrão do Google por cima do mapa
+      this.resolverCliqueNoMapa(placeId);
+    });
 
-      if (!place.place_id || !location) {
-        // Usuário deu Enter sem escolher uma sugestão da lista — ignora.
+    if (jaSelecionado) {
+      this.desenharPino(jaSelecionado);
+    }
+  }
+
+  private resolverCliqueNoMapa(placeId: string): void {
+    if (!this.placesService) {
+      this.placesService = new google.maps.places.PlacesService(this.map!);
+    }
+
+    this.placesService.getDetails(
+      { placeId, fields: ['place_id', 'name', 'formatted_address', 'geometry', 'icon', 'icon_background_color'] },
+      (place, status) => {
+        if (status !== google.maps.places.PlacesServiceStatus.OK || !place?.geometry?.location) return;
+
+        const selection: PharmacySelection = {
+          name: place.name ?? '',
+          address: place.formatted_address ?? '',
+          placeId: place.place_id ?? placeId,
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+          iconUrl: place.icon ?? null,
+          iconBackgroundColor: place.icon_background_color ?? null,
+        };
+
+        this.selected.set(selection);
+        this.applySelection(selection, false);
+      }
+    );
+  }
+
+  private localizacaoInicial(): Promise<{ center: google.maps.LatLngLiteral; zoom: number }> {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
+        resolve({ center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM });
         return;
       }
-
-      const selection: PharmacySelection = {
-        name: place.name ?? input.value,
-        address: place.formatted_address ?? '',
-        placeId: place.place_id,
-        lat: location.lat(),
-        lng: location.lng(),
-        iconUrl: place.icon ?? null,
-        iconBackgroundColor: place.icon_background_color ?? null,
-      };
-
-      this.selected.set(selection);
-      this.applySelection(selection);
+      navigator.geolocation.getCurrentPosition(
+        (pos) => resolve({ center: { lat: pos.coords.latitude, lng: pos.coords.longitude }, zoom: LOCATED_ZOOM }),
+        () => resolve({ center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM }),
+        { timeout: 4000 }
+      );
     });
-
-    if (this.value) {
-      input.value = this.value.name;
-      this.applySelection(this.value);
-    }
   }
 
-  private applySelection(place: PharmacySelection): void {
+  private applySelection(place: PharmacySelection, recenter: boolean): void {
     this.valueChange.emit(place);
+    this.desenharPino(place);
 
-    // O container do mapa some via CSS até aqui — dá um tick pro Angular
-    // tirar a classe "hidden" antes de inicializar/redimensionar o mapa
-    // (o Maps mede o elemento na hora da criação; se ainda estiver
-    // display:none, ele nasce com tamanho zero).
-    setTimeout(() => this.showOnMap(place), 0);
+    if (recenter && this.map) {
+      this.map.panTo({ lat: place.lat, lng: place.lng });
+      this.map.setZoom(LOCATED_ZOOM);
+    }
   }
 
-  private showOnMap(place: PharmacySelection): void {
-    const position = { lat: place.lat, lng: place.lng };
-
-    if (!this.map) {
-      this.map = new google.maps.Map(this.mapContainerRef.nativeElement, {
-        center: position,
-        zoom: 16,
-        disableDefaultUI: true,
-        zoomControl: true,
-        // AdvancedMarkerElement exige um mapId (não precisa ser um Map ID
-        // real configurado no Cloud Console pra funcionar sem estilização
-        // na nuvem) — "DEMO_MAP_ID" é o placeholder documentado pelo Google
-        // pra esse exato caso.
-        mapId: 'DEMO_MAP_ID',
-      });
-    } else {
-      // O container pode ter estado com display:none até agora — força o
-      // Maps a remedir o elemento, senão o mapa fica com o tamanho antigo.
-      google.maps.event.trigger(this.map, 'resize');
-      this.map.setCenter(position);
-    }
+  private desenharPino(place: PharmacySelection): void {
+    if (!this.map) return;
 
     if (this.marker) {
       this.marker.map = null;
     }
     this.marker = new google.maps.marker.AdvancedMarkerElement({
-      position,
+      position: { lat: place.lat, lng: place.lng },
       map: this.map,
       content: this.buildPinElement(place),
       title: place.name,

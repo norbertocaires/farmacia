@@ -1,30 +1,43 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, switchMap, of } from 'rxjs';
-import { FarmaciaService } from '../../pages/user-medication/services/user-medication.service';
+import { ToastrService } from 'ngx-toastr';
+import { FarmaciaService } from '../user-medication/services/user-medication.service';
+import { UserMedicationDto } from '../user-medication/dto/user-medication.dto';
 import type { IScannerControls } from '@zxing/browser';
 import { GoogleMapsLoaderService } from '../../common/google-maps/google-maps-loader.service';
-import { PharmacyPickerComponent } from '../pharmacy-picker/pharmacy-picker.component';
-import { PharmacySelection } from '../pharmacy-picker/pharmacy-selection';
+import { PharmacyPickerComponent } from '../../components/pharmacy-picker/pharmacy-picker.component';
+import { PharmacySelection } from '../../components/pharmacy-picker/pharmacy-selection';
 
+/**
+ * Página (não mais modal) de vincular/editar medicamento. Foi convertida de
+ * modal pra página própria porque o Google Places Autocomplete, dentro do
+ * mat-dialog, brigava com o overlay do Angular Material (z-index) e com a
+ * rolagem interna do modal (o dropdown do Google só acompanha scroll/resize
+ * da janela, não de um container interno) — como página cheia, o scroll é
+ * sempre o da janela, então o problema desaparece pela raiz.
+ */
 @Component({
-  selector: 'app-vincular-medication-modal',
+  selector: 'app-vincular-medication',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule, MatDialogModule,
+    CommonModule, ReactiveFormsModule,
     MatProgressSpinnerModule, PharmacyPickerComponent
   ],
-  encapsulation: ViewEncapsulation.None,
   templateUrl: './vincular-medication.html',
   styleUrls: ['./vincular-medication.scss']
 })
-export class VincularMedicationModalComponent implements OnInit, OnDestroy {
+export class VincularMedicationPageComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   loading  = signal(false);
   scanning = signal(false);
+  carregandoDetalhes = signal(false);
+
+  editId: string | null = null;
+  private detalhes: UserMedicationDto | null = null;
 
   @ViewChild('videoPreview') videoPreview!: ElementRef<HTMLVideoElement>;
 
@@ -37,16 +50,21 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
     private farmaciaService: FarmaciaService,
     private cdr: ChangeDetectorRef,
     private mapsLoader: GoogleMapsLoaderService,
-    public dialogRef: MatDialogRef<VincularMedicationModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    private route: ActivatedRoute,
+    private router: Router,
+    private toast: ToastrService,
   ) { }
 
   get mapsAvailable(): boolean {
     return this.mapsLoader.isConfigured;
   }
 
+  get isEditMode(): boolean {
+    return !!this.editId;
+  }
+
   get pharmacyValue(): PharmacySelection | null {
-    const f = this.data?.farmacia;
+    const f = this.detalhes?.farmacia;
     return f?.nome ? {
       name: f.nome, address: f.endereco ?? '', placeId: f.placeId ?? '', lat: f.lat ?? 0, lng: f.lng ?? 0,
       iconUrl: f.iconUrl ?? null, iconBackgroundColor: f.iconBackgroundColor ?? null,
@@ -57,41 +75,49 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
     return new Date().toISOString().split('T')[0];
   }
 
-  get isEditMode(): boolean {
-    return !!this.data?.editMode;
+  ngOnInit(): void {
+    this.editId = this.route.snapshot.paramMap.get('id');
+    this.buildForm();
+    this.watchEan();
+
+    if (this.editId) {
+      this.carregarDetalhes(this.editId);
+    }
   }
 
-  ngOnInit(): void {
+  private buildForm(): void {
     this.form = this.fb.group({
-      ean:             [{ value: this.data?.ean ?? '', disabled: this.isEditMode }, this.isEditMode ? [] : [Validators.required]],
+      ean:             [{ value: '', disabled: this.isEditMode }, this.isEditMode ? [] : [Validators.required]],
       medicationId:    [{ value: this.isEditMode ? '__edit__' : '', disabled: false }, Validators.required],
       // Campos de exibição — excluídos do payload no salvar()
-      nomeVisual:      [this.data?.nome ?? ''],
+      nomeVisual:      [''],
       tipoProduto:     [''],
-      substancia:      [this.data?.substancia ?? ''],
+      substancia:      [''],
       laboratorio:     [''],
       apresentacao:    [''],
       pmcZero:         [null],
       precoFabrica:    [''],
       // Campos enviados ao backend
-      pricePaid:       [this.data?.pricePaid       ?? null, [Validators.required, Validators.min(0.01)]],
-      boxQuantity:     [this.data?.boxQuantity     ?? 1,    [Validators.required, Validators.min(1)]],
-      totalQuantity:   [this.data?.totalQuantity   ?? null, [Validators.required, Validators.min(1)]],
-      dosage:          [this.data?.dosage          ?? 1,    [Validators.required, Validators.min(0.1)]],
-      frequencyPerDay: [this.data?.frequencyPerDay ?? 1,    [Validators.required, Validators.min(1)]],
-      dataCompra:      [this.data?.dataCompra ? this.data.dataCompra.split('T')[0] : this.todayIso(), [
+      pricePaid:       [null, [Validators.required, Validators.min(0.01)]],
+      boxQuantity:     [1,    [Validators.required, Validators.min(1)]],
+      totalQuantity:   [null, [Validators.required, Validators.min(1)]],
+      dosage:          [1,    [Validators.required, Validators.min(0.1)]],
+      frequencyPerDay: [1,    [Validators.required, Validators.min(1)]],
+      dataCompra:      [this.todayIso(), [
         (control: import('@angular/forms').AbstractControl) => control.value && control.value > this.todayIso() ? { futureDate: true } : null
       ]],
       // Farmácia onde comprou — opcional, preenchida pelo seletor do Google Places
-      pharmacyName:    [this.pharmacyValue?.name    ?? null],
-      pharmacyAddress: [this.pharmacyValue?.address ?? null],
-      pharmacyPlaceId: [this.pharmacyValue?.placeId ?? null],
-      pharmacyLat:     [this.pharmacyValue?.lat     ?? null],
-      pharmacyLng:     [this.pharmacyValue?.lng     ?? null],
-      pharmacyIconUrl:             [this.pharmacyValue?.iconUrl             ?? null],
-      pharmacyIconBackgroundColor: [this.pharmacyValue?.iconBackgroundColor ?? null],
+      pharmacyName:    [null],
+      pharmacyAddress: [null],
+      pharmacyPlaceId: [null],
+      pharmacyLat:     [null],
+      pharmacyLng:     [null],
+      pharmacyIconUrl:             [null],
+      pharmacyIconBackgroundColor: [null],
     });
+  }
 
+  private watchEan(): void {
     this.form.get('ean')?.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
@@ -124,10 +150,41 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       }
     });
+  }
 
-    if (this.isEditMode && this.data?.medicamento) {
-      this.aplicarResultadoBusca(this.data.medicamento);
-    }
+  private carregarDetalhes(id: string): void {
+    this.carregandoDetalhes.set(true);
+    this.farmaciaService.getById(id).subscribe({
+      next: (detalhes) => {
+        this.detalhes = detalhes;
+        if (detalhes.medicamento) this.aplicarResultadoBusca(detalhes.medicamento);
+        this.form.patchValue({
+          ean:             detalhes.ean ?? '',
+          pricePaid:       detalhes.pricePaid       ?? null,
+          boxQuantity:     detalhes.boxQuantity      ?? 1,
+          totalQuantity:   detalhes.totalQuantity    ?? null,
+          dosage:          detalhes.dosage           ?? 1,
+          frequencyPerDay: detalhes.frequencyPerDay  ?? 1,
+          dataCompra:      detalhes.dataCompra ? detalhes.dataCompra.split('T')[0] : this.todayIso(),
+          pharmacyName:    this.pharmacyValue?.name    ?? null,
+          pharmacyAddress: this.pharmacyValue?.address ?? null,
+          pharmacyPlaceId: this.pharmacyValue?.placeId ?? null,
+          pharmacyLat:     this.pharmacyValue?.lat     ?? null,
+          pharmacyLng:     this.pharmacyValue?.lng     ?? null,
+          pharmacyIconUrl:             this.pharmacyValue?.iconUrl             ?? null,
+          pharmacyIconBackgroundColor: this.pharmacyValue?.iconBackgroundColor ?? null,
+        }, { emitEvent: false });
+        this.carregandoDetalhes.set(false);
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        // Sem os dados completos não é seguro mostrar o formulário: os campos que
+        // faltarem cairiam nos defaults e sobrescreveriam o registro real ao salvar.
+        this.carregandoDetalhes.set(false);
+        this.toast.error('Não foi possível carregar os dados desse medicamento para edição. Tente novamente.');
+        this.router.navigate(['/dashboard']);
+      }
+    });
   }
 
   onPharmacySelected(selection: PharmacySelection | null): void {
@@ -192,6 +249,10 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
     this.stopScan();
   }
 
+  cancelar(): void {
+    this.router.navigate(['/dashboard']);
+  }
+
   salvar() {
     if (this.form.valid) {
       this.loading.set(true);
@@ -200,13 +261,13 @@ export class VincularMedicationModalComponent implements OnInit, OnDestroy {
       const payload = { ...rest, purchaseDate: dataCompraIso };
 
       if (this.isEditMode) {
-        this.farmaciaService.atualizarVinculo(this.data.id, payload).subscribe({
-          next: () => this.dialogRef.close(true),
+        this.farmaciaService.atualizarVinculo(this.editId!, payload).subscribe({
+          next: () => { this.loading.set(false); this.router.navigate(['/dashboard']); },
           error: () => this.loading.set(false)
         });
       } else {
         this.farmaciaService.vincularRemedio({ medicationId, ...payload }).subscribe({
-          next: () => this.dialogRef.close(true),
+          next: () => { this.loading.set(false); this.router.navigate(['/dashboard']); },
           error: () => this.loading.set(false)
         });
       }

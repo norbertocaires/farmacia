@@ -1,12 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { FarmaciaService } from './services/user-medication.service';
 import { UserMedicationDto } from './dto/user-medication.dto';
-import { MatDialog } from '@angular/material/dialog';
-import { VincularMedicationModalComponent } from '@core/vincular-medication/vincular-medication';
 import { CurrencyPipe, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from '@core/confirm-dialog/confirm-dialog';
-import { ToastrService } from 'ngx-toastr';
 
 export interface DayGroup {
   dayLabel: string;
@@ -41,8 +39,7 @@ export class ListagemComponent implements OnInit {
   constructor(
     private farmaciaService: FarmaciaService,
     private cdr: ChangeDetectorRef,
-    private dialog: MatDialog,
-    private toast: ToastrService
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -133,51 +130,11 @@ export class ListagemComponent implements OnInit {
   }
 
   abrirModalVincular(): void {
-    const dialogRef = this.dialog.open(VincularMedicationModalComponent, {
-      width: '95vw',
-      maxWidth: '500px',
-      disableClose: true,
-      panelClass: 'custom-modal-container'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) this.carregarDados();
-    });
+    this.router.navigate(['/vincular-medicamento']);
   }
 
   abrirModalEditar(item: UserMedicationDto): void {
-    this.farmaciaService.getById(item.id).subscribe({
-      next: (detalhes) => {
-        const dialogRef = this.dialog.open(VincularMedicationModalComponent, {
-          width: '95vw',
-          maxWidth: '500px',
-          disableClose: true,
-          panelClass: 'custom-modal-container',
-          data: {
-            editMode:       true,
-            id:             detalhes.id,
-            nome:           detalhes.nome,
-            substancia:     detalhes.substancia,
-            pricePaid:      detalhes.pricePaid      ?? null,
-            boxQuantity:    detalhes.boxQuantity    ?? 1,
-            totalQuantity:  detalhes.totalQuantity  ?? null,
-            dosage:         detalhes.dosage         ?? 1,
-            frequencyPerDay: detalhes.frequencyPerDay ?? 1,
-            dataCompra:     detalhes.dataCompra     ?? null,
-            farmacia:       detalhes.farmacia        ?? null,
-            medicamento:    detalhes.medicamento
-          }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) this.carregarDados();
-        });
-      },
-      error: () => {
-        // Sem os dados completos não é seguro abrir o modal: os campos que faltarem
-        // cairiam nos defaults do formulário e sobrescreveriam o registro real ao salvar.
-        this.toast.error('Não foi possível carregar os dados desse medicamento para edição. Tente novamente.');
-      }
-    });
+    this.router.navigate(['/vincular-medicamento', item.id]);
   }
 
   removerMedicacao(item: UserMedicationDto): void {

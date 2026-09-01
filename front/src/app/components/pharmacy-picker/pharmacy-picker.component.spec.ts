@@ -71,4 +71,33 @@ describe('PharmacyPickerComponent', () => {
       expect(emitted).toEqual([null]);
     });
   });
+
+  describe('selecionarRecente()', () => {
+    beforeEach(async () => {
+      // O mapa nunca termina de carregar (load() nunca resolve) — igual ao
+      // describe de clear() acima. selecionarRecente() precisa continuar
+      // funcionando (emitir a seleção) mesmo que o mapa ainda não exista,
+      // já que os chips de "recentes" aparecem antes do Maps terminar de
+      // carregar (a consulta é só ao nosso próprio backend).
+      await TestBed.configureTestingModule({
+        imports: [PharmacyPickerComponent],
+        providers: [{ provide: GoogleMapsLoaderService, useValue: { isConfigured: true, load: () => new Promise(() => {}) } }],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(PharmacyPickerComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('should select the pharmacy and emit it even before the map has loaded', () => {
+      const emitted: (import('./pharmacy-selection').PharmacySelection | null)[] = [];
+      component.valueChange.subscribe((v) => emitted.push(v));
+
+      const farmacia = { name: 'Farmácia X', address: 'Rua Y, 123', placeId: 'abc', lat: -23.5, lng: -46.6 };
+      component.selecionarRecente(farmacia);
+
+      expect(component.selected()).toEqual(farmacia);
+      expect(emitted).toEqual([farmacia]);
+    });
+  });
 });

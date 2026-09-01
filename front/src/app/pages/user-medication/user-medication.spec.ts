@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { MatDialog } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
-import { of, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { ListagemComponent } from './user-medication';
 import { UserMedicationDto } from './dto/user-medication.dto';
@@ -13,22 +11,19 @@ describe('ListagemComponent', () => {
   let component: ListagemComponent;
   let fixture: ComponentFixture<ListagemComponent>;
   let httpMock: HttpTestingController;
-  const dialogStub = { open: vi.fn() };
-  const toast = { success: vi.fn(), error: vi.fn(), warning: vi.fn() };
+  const router = { navigate: vi.fn() };
 
   beforeEach(async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-07-20T12:00:00'));
-    dialogStub.open.mockClear();
-    toast.error.mockClear();
+    router.navigate.mockClear();
 
     await TestBed.configureTestingModule({
       imports: [ListagemComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: MatDialog, useValue: dialogStub },
-        { provide: ToastrService, useValue: toast },
+        { provide: Router, useValue: router },
       ],
     }).compileComponents();
 
@@ -121,24 +116,18 @@ describe('ListagemComponent', () => {
     req.flush([]);
   });
 
-  it('should open the edit modal once the medication details load successfully', () => {
+  it('should navigate to the vincular-medicamento page when adding a new medication', () => {
     fixture.detectChanges();
     httpMock.expectOne(
       `${environment.apiUrl}/meus-remedios/resumo/periodo?inicio=2026-04-20&fim=2026-07-20`
     ).flush([]);
 
-    component.abrirModalEditar({ id: 5, nome: 'Dipirona', substancia: 'Dipirona' } as UserMedicationDto);
+    component.abrirModalVincular();
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/meus-remedios/5`);
-    req.flush({ id: 5, pricePaid: 12.5, boxQuantity: 2, totalQuantity: 30, dosage: 1, frequencyPerDay: 2, dataCompra: '2026-05-01' } as UserMedicationDto);
-
-    expect(dialogStub.open).toHaveBeenCalledTimes(1);
-    const dialogData = dialogStub.open.mock.calls[0][1].data;
-    expect(dialogData.pricePaid).toBe(12.5);
-    expect(dialogData.boxQuantity).toBe(2);
+    expect(router.navigate).toHaveBeenCalledWith(['/vincular-medicamento']);
   });
 
-  it('should not open the edit modal with incomplete data when loading details fails', () => {
+  it('should navigate to the vincular-medicamento edit page with the item id', () => {
     fixture.detectChanges();
     httpMock.expectOne(
       `${environment.apiUrl}/meus-remedios/resumo/periodo?inicio=2026-04-20&fim=2026-07-20`
@@ -146,10 +135,6 @@ describe('ListagemComponent', () => {
 
     component.abrirModalEditar({ id: 5, nome: 'Dipirona', substancia: 'Dipirona' } as UserMedicationDto);
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/meus-remedios/5`);
-    req.flush({ message: 'Erro' }, { status: 500, statusText: 'Server Error' });
-
-    expect(dialogStub.open).not.toHaveBeenCalled();
-    expect(toast.error).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/vincular-medicamento', 5]);
   });
 });
