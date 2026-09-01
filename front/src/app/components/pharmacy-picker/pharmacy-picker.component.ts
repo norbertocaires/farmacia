@@ -38,6 +38,8 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
   private autocomplete: google.maps.places.Autocomplete | null = null;
   private map: google.maps.Map | null = null;
   private marker: google.maps.marker.AdvancedMarkerElement | null = null;
+  private scrollRepositionPending = false;
+  private readonly onAncestorScroll = () => this.notifyLayoutShift();
 
   constructor(
     private mapsLoader: GoogleMapsLoaderService,
@@ -48,12 +50,44 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
     // Farmácias recentes não dependem do Maps carregado — é só uma consulta
     // ao nosso próprio backend, então mostra o quanto antes.
     this.pharmacyService.getMine().subscribe({
-      next: (lista) => this.recentes.set(lista),
+      next: (lista) => { this.recentes.set(lista); this.notifyLayoutShift(); },
       error: () => this.recentes.set([]),
     });
   }
 
+  /**
+   * O widget legado google.maps.places.Autocomplete calcula a posição do seu
+   * dropdown (`.pac-container`, injetado fora do Angular, direto no <body>)
+   * a partir da posição do campo na tela, e só recalcula em eventos de
+   * scroll/resize da JANELA — nunca em reflows arbitrários da página nem em
+   * scroll de um container interno (ex.: o corpo do modal, que tem rolagem
+   * própria). Duas situações comuns aqui deixam essa posição desatualizada:
+   *
+   *  1. A lista "Suas farmácias" chega de forma assíncrona e, ao renderizar,
+   *     empurra o campo pra baixo — se o usuário já tiver começado a digitar
+   *     antes dela chegar (rede real tem mais latência que localhost), o
+   *     dropdown abre grudado na posição antiga.
+   *  2. O modal tem rolagem interna; ao rolar até o campo de farmácia, esse
+   *     scroll não é do `window`, então o Google nunca fica sabendo.
+   *
+   * Em ambos os casos, disparar um evento de `resize` sintético força o
+   * widget a reler a posição atual do campo e reposicionar o dropdown.
+   */
+  private notifyLayoutShift(): void {
+    if (this.scrollRepositionPending) return;
+    this.scrollRepositionPending = true;
+    requestAnimationFrame(() => {
+      this.scrollRepositionPending = false;
+      window.dispatchEvent(new Event('resize'));
+    });
+  }
+
   ngAfterViewInit(): void {
+    // Eventos de scroll não voltam a subir (bubble), mas a fase de captura
+    // passa por todo ancestral mesmo assim — isso pega o scroll do corpo do
+    // modal (ou qualquer outro container rolável) sem precisar saber qual é.
+    document.addEventListener('scroll', this.onAncestorScroll, { capture: true, passive: true });
+
     if (!this.mapsLoader.isConfigured) {
       this.unavailable.set(true);
       return;
@@ -67,6 +101,7 @@ export class PharmacyPickerComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnDestroy(): void {
+    document.removeEventListener('scroll', this.onAncestorScroll, { capture: true });
     if (this.autocomplete) {
       google.maps.event.clearInstanceListeners(this.autocomplete);
     }
